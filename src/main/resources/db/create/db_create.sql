@@ -1,0 +1,6 @@
+CREATE USER "forum" LOGIN ENCRYPTED PASSWORD 'forum' VALID UNTIL 'infinity';
+CREATE DATABASE "forum" WITH OWNER = "forum" ENCODING = 'UTF8' CONNECTION LIMIT = 100;
+
+GRANT ALL ON DATABASE "forum" TO "forum";
+
+ALTER ROLE "forum" SET search_path TO "forum";
