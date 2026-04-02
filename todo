@@ -1,0 +1,57 @@
+robimy podział kodu na feature
+users/
+threads/
+categories/
+
+wewnątrz feature podział na
+application/
+domain/
+infrastructure/
+query/
+
+dane typu username, password, PersonalInfoVO(imie, nazwisko, data urodzienia) robimy jako value object
+na VO ma metoda create która od razu waliduje dane wejściowe i zwraca Result<UsernameVO, ErrorEnum>
+ddd
+
+Użytkownicy:
+użytkownik się sam rejestruje na username i od razu podaje password
+podstawowe dane: imie, nazwisko, data urodzenia, mail
+przy rejestracji podajemy enuma czy user ma być adminem czy zwykłym userem
+robimy walidacje na unikalnośc username, jakaś tam polityka haseł, reszta danych usera po prostu musi być przekazana (jakaś maksymalna długość)
+pomocnicze dane (data utworzenia)
+wstętpnie tylko rejestracja i logowanie
+uwierzytelnianie oparte o token JWT
+
+Kategorie:
+kategorie mają strukture drzewa, kategorie root, podkategorie itp.
+np.
+pomoc
+    techniczna
+    biznesowa
+        abc
+        xdf
+dyskusje
+    propozycje
+    błędy
+    pytania
+kategoriami można zarządzać (tworzenie, edycja nazwy) tylko admini
+nazwa kategorii wymagana
+unikalność na pełną ścieżkę (np. ABC/CAT i DEF/CAT mogą być)
+
+Wątki:
+wątki tworzy każdy użytkownik (admin i zwykły user)
+tytuł, opis, kategoria, różne dane pomocnicze (kto założył, kiedy założył itp)
+zarządzanie wątkiem (edycja tytułu, opisu, usunięcie, usuwanie komentarzy) dla adminów i użytkownika który założył
+
+
+Komentarze:
+komentarze dodajemy do wątku, każdy może je dodać
+treść komentarza i dane pomocnicze (kto i kiedy)
+komentarz może byc usunięty przez moderatora wątku (admin lub user który dodał wątek) lub tego co napisał dany komentarz
+
+
+Live Chat na websocket
+
+
+dockeryzacja aplikacji
+frontend
