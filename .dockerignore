@@ -1,0 +1,12 @@
+.gradle
+build
+frontend
+gradlew
+gradlew.bat
+gradle
+HELP.md
+todo
+Dockerfile
+.dockerignore
+.git
+.idea
