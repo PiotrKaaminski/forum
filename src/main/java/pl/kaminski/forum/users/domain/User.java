@@ -1,17 +1,21 @@
 package pl.kaminski.forum.users.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.Result;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.Optional;
 
 @Entity
 @Data
+@Builder(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
 
     @Id

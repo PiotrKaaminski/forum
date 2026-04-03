@@ -1,5 +1,7 @@
 package pl.kaminski.forum.commons.result;
 
+import java.util.function.Consumer;
+
 public class Result<S, E extends ResultError> {
 
     private final S success;
@@ -36,6 +38,14 @@ public class Result<S, E extends ResultError> {
     public boolean isSuccess() {return isSuccess;}
 
     public boolean isError() {return !isSuccess;}
+
+    public void process(Consumer<S> successConsumer, Consumer<E> errorConsumer) {
+        if (isSuccess) {
+            successConsumer.accept(success);
+        } else {
+            errorConsumer.accept(error);
+        }
+    }
 
     private void assertIsError() {
         if (isSuccess()) {

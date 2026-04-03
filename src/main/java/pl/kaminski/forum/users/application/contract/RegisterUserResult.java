@@ -31,9 +31,7 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
 
         public static class Builder extends AbstractInputValidationError.Builder<ViolationError, ViolationDetails> {
 
-            public Builder withUsernameVoResult(Result<?, UsernameVO.Error> usernameVoResult) {
-                if (usernameVoResult.isSuccess()) return this;
-                var error = usernameVoResult.getError();
+            public void withUsernameVoError(UsernameVO.Error error) {
                 var violation = switch (error) {
                     case EMPTY -> ViolationError.USERNAME_EMPTY;
                     case TOO_LONG -> ViolationError.USERNAME_TOO_LONG;
@@ -41,7 +39,6 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
                     case NOT_UNIQUE -> ViolationError.USERNAME_NOT_UNIQUE;
                 };
                 withViolation(violation);
-                return this;
             }
 
             public void withPasswordVoError(PasswordVO.Error error) {
@@ -52,7 +49,6 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
                     case CONTAINS_WHITESPACE -> ViolationError.PASSWORD_CONTAINS_WHITESPACE;
                 };
                 withViolation(violation);
-                return this;
             }
 
             public void withFirstNameVoError(FirstNameVO.Error error) {
@@ -83,7 +79,6 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
 
             public void withEmptyRole() {
                 withViolation(ViolationError.ROLE_EMPTY);
-                return this;
             }
 
             private void withViolation(ViolationError error) {
