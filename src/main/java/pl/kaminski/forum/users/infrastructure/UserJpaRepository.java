@@ -7,7 +7,7 @@ import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.users.domain.User;
 
 @Repository
-public interface UserJpaRepository extends JpaRepository<User, EntityId> {
+interface UserJpaRepository extends JpaRepository<User, EntityId> {
 
     @Query("SELECT u FROM User u WHERE u.username.value = :username")
     Boolean existsByUsername(String username);

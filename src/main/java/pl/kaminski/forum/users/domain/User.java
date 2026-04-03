@@ -14,7 +14,7 @@ import java.time.ZoneId;
 @Data
 public class User {
 
-    @EmbeddedId
+    @Id
     @AttributeOverride(name = "value", column = @Column(name = "user_id"))
     private EntityId id;
     @Embedded
