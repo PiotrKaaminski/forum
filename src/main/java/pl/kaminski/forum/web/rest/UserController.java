@@ -4,18 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.kaminski.forum.api.users.RegisterUserRequest;
-import pl.kaminski.forum.users.application.UserService;
+import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
+import pl.kaminski.forum.users.application.contract.IUserService;
+import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final IUserService userService;
 
     @PostMapping("/user")
-    void registerNewUser(RegisterUserRequest request) {
-        userService.registerNewUser(request);
+    RegisterUserResult registerNewUser(RegisterUserRequest request) {
+        return userService.registerNewUser(request);
     }
 }

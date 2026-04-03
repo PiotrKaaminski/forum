@@ -1,4 +1,4 @@
-package pl.kaminski.forum;
+package pl.kaminski.forum.web.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

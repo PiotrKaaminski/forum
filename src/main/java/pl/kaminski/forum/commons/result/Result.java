@@ -6,14 +6,14 @@ public class Result<S, E extends ResultError> {
     private final E error;
     private final boolean isSuccess;
 
-    public Result(S success) {
+    protected Result(S success) {
         assert success != null : "success object cannot be null";
         this.success = success;
         this.error = null;
         this.isSuccess = true;
     }
 
-    public Result(E error) {
+    protected Result(E error) {
         assert error != null : "error object cannot be null";
         this.error = error;
         this.isSuccess = false;

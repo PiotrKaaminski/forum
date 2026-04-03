@@ -10,14 +10,14 @@ import pl.kaminski.forum.commons.result.ResultError;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsernameVO {
+public class PasswordVO {
 
     private static final int MIN_LENGTH = 3;
     private static final int MAX_LENGTH = 20;
 
     private String value;
 
-    public static Result<UsernameVO, Error> create(String value) {
+    public static Result<PasswordVO, Error> create(String value) {
         if (!StringUtils.hasText(value)) {
             return Result.error(Error.EMPTY);
         }
@@ -27,15 +27,19 @@ public class UsernameVO {
         if (value.length() > MAX_LENGTH) {
             return Result.error(Error.TOO_LONG);
         }
-        return Result.success(new UsernameVO(value));
+        if (StringUtils.containsWhitespace(value)) {
+            return Result.error(Error.CONTAINS_WHITESPACE);
+        }
+        return Result.success(new PasswordVO(value));
     }
 
     @RequiredArgsConstructor
     @Getter
     public enum Error implements ResultError {
-        EMPTY("username cannot be empty"),
-        TOO_SHORT("username is too short, min length: " + MIN_LENGTH),
-        TOO_LONG("username is too long, max length: " + MAX_LENGTH);
+        EMPTY("password cannot be empty"),
+        TOO_SHORT("password is too short, min length: " + MIN_LENGTH),
+        TOO_LONG("password is too long, max length: " + MAX_LENGTH),
+        CONTAINS_WHITESPACE("password cannot contain whitespace");
 
         private final String message;
     }

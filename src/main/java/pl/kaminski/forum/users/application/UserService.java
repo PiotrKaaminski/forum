@@ -2,20 +2,25 @@ package pl.kaminski.forum.users.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.kaminski.forum.api.users.RegisterUserRequest;
-import pl.kaminski.forum.users.domain.PersonalInfoVO;
+import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
+import pl.kaminski.forum.users.application.contract.IUserService;
+import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 import pl.kaminski.forum.users.domain.User;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements IUserService {
 
     private final UserRepository userRepository;
 
-    public void registerNewUser(RegisterUserRequest request) {
-        var personalInfo = PersonalInfoVO.create(request.firstName(), request.lastName(), request.birthDate());
-        var user = User.create(request.username(), request.password(), personalInfo, request.role());
-
+    public RegisterUserResult registerNewUser(RegisterUserRequest request) {
+        var createUserResult = User.createFromRequest(request);
+        if (createUserResult.isError()) {
+            return RegisterUserResult.fromValidationError(createUserResult.getError());
+        }
+        var user = createUserResult.getSuccess();
         // walidacja Uniqueness username
+
+        return RegisterUserResult.success(user.getId().value());
     }
 }

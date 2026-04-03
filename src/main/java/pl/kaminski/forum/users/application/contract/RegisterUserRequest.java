@@ -1,4 +1,4 @@
-package pl.kaminski.forum.api.users;
+package pl.kaminski.forum.users.application.contract;
 
 import pl.kaminski.forum.users.domain.Role;
 
