@@ -7,6 +7,8 @@ import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.users.domain.User;
 import pl.kaminski.forum.users.domain.UsernameVO;
 
+import java.util.Optional;
+
 @Repository
 interface UserJpaRepository extends JpaRepository<User, EntityId> {
 

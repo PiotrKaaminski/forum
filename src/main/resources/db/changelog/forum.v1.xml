@@ -4,9 +4,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
 
 <changeSet id="1" author="PD">
-    <createTable tableName="user">
+    <createTable tableName="users">
         <column name="user_id" type="uuid" defaultValueComputed="gen_random_uuid()">
-            <constraints primaryKey="true" primaryKeyName="user_pk"/>
+            <constraints primaryKey="true" primaryKeyName="users_pk"/>
         </column>
         <column name="username" type="varchar(255)">
             <constraints nullable="false" unique="true"/>
