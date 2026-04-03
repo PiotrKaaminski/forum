@@ -55,11 +55,13 @@ liquibase {
     activities {
         main {
             changelogFile "db/changelog/forum.master.xml"
-            classpath "${projectDir}/build/resources/main"
-            outputFile "${projectDir}/build/liquibase.sql"
+            searchpath "${projectDir}/build/resources/main"
+            outputFile "./build/liquibase.sql"
             url 'jdbc:postgresql://localhost:5432/forum'
             username 'forum'
             password 'forum'
         }
     }
 }
+
+update.dependsOn processResources
