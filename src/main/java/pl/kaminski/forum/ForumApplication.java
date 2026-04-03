@@ -3,10 +3,11 @@ package pl.kaminski.forum;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
+import pl.kaminski.forum.commons.CommonsConfiguration;
 import pl.kaminski.forum.users.infrastructure.UserConfiguration;
 
 @SpringBootApplication
-@Import({UserConfiguration.class})
+@Import({UserConfiguration.class, CommonsConfiguration.class})
 public class ForumApplication {
 
     public static void main(String[] args) {

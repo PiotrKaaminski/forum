@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.commons.result.AbstractInputValidationError;
 import pl.kaminski.forum.commons.result.Result;
 import pl.kaminski.forum.commons.result.ResultError;
-import pl.kaminski.forum.users.domain.PasswordVO;
-import pl.kaminski.forum.users.domain.UsernameVO;
+import pl.kaminski.forum.users.domain.*;
 
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +29,7 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
             super(violations);
         }
 
-        public static class Builder extends AbstractInputValidationError.Builder<ValidationError.ViolationError, ValidationError.ViolationDetails> {
+        public static class Builder extends AbstractInputValidationError.Builder<ViolationError, ViolationDetails> {
 
             public Builder withUsernameVoResult(Result<?, UsernameVO.Error> usernameVoResult) {
                 if (usernameVoResult.isSuccess()) return this;
@@ -39,14 +38,13 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
                     case EMPTY -> ViolationError.USERNAME_EMPTY;
                     case TOO_LONG -> ViolationError.USERNAME_TOO_LONG;
                     case TOO_SHORT -> ViolationError.USERNAME_TOO_SHORT;
+                    case NOT_UNIQUE -> ViolationError.USERNAME_NOT_UNIQUE;
                 };
                 withViolation(violation);
                 return this;
             }
 
-            public Builder withPasswordVoResult(Result<?, PasswordVO.Error> usernameVoResult) {
-                if (usernameVoResult.isSuccess()) return this;
-                var error = usernameVoResult.getError();
+            public void withPasswordVoError(PasswordVO.Error error) {
                 var violation = switch (error) {
                     case EMPTY -> ViolationError.PASSWORD_EMPTY;
                     case TOO_LONG -> ViolationError.PASSWORD_TOO_LONG;
@@ -57,7 +55,33 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
                 return this;
             }
 
-            public Builder withEmptyRole() {
+            public void withFirstNameVoError(FirstNameVO.Error error) {
+                var violation = switch (error) {
+                    case EMPTY -> ViolationError.FIRST_NAME_EMPTY;
+                    case TOO_SHORT -> ViolationError.FIRST_NAME_TOO_SHORT;
+                    case TOO_LONG -> ViolationError.FIRST_NAME_TOO_LONG;
+                };
+                withViolation(violation);
+            }
+
+            public void withLastNameVoError(LastNameVO.Error error) {
+                var violation = switch (error) {
+                    case EMPTY -> ViolationError.LAST_NAME_EMPTY;
+                    case TOO_SHORT -> ViolationError.LAST_NAME_TOO_SHORT;
+                    case TOO_LONG -> ViolationError.LAST_NAME_TOO_LONG;
+                };
+                withViolation(violation);
+            }
+
+            public void withBirthDateVoError(BirthDateVO.Error error) {
+                var violation = switch (error) {
+                    case EMPTY -> ViolationError.BIRTHDATE_EMPTY;
+                    case FUTURE_BIRTHDATE -> ViolationError.BIRTHDATE_FUTURE;
+                };
+                withViolation(violation);
+            }
+
+            public void withEmptyRole() {
                 withViolation(ViolationError.ROLE_EMPTY);
                 return this;
             }
@@ -77,12 +101,19 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
             USERNAME_EMPTY(InvalidField.USERNAME, InvalidReason.EMPTY),
             USERNAME_TOO_SHORT(InvalidField.USERNAME, InvalidReason.TOO_SHORT),
             USERNAME_TOO_LONG(InvalidField.USERNAME, InvalidReason.TOO_LONG),
+            USERNAME_NOT_UNIQUE(InvalidField.USERNAME, InvalidReason.NON_UNIQUE),
             PASSWORD_EMPTY(InvalidField.PASSWORD, InvalidReason.EMPTY),
             PASSWORD_TOO_SHORT(InvalidField.PASSWORD, InvalidReason.TOO_SHORT),
             PASSWORD_TOO_LONG(InvalidField.PASSWORD, InvalidReason.TOO_LONG),
             PASSWORD_CONTAINS_WHITESPACE(InvalidField.PASSWORD, InvalidReason.CONTAINS_WHITESPACE),
-            EMAIL_EMPTY(InvalidField.EMAIL, InvalidReason.EMPTY),
-            EMAIL_INVALID(InvalidField.EMAIL, InvalidReason.INVALID),
+            FIRST_NAME_EMPTY(InvalidField.FIRST_NAME, InvalidReason.EMPTY),
+            FIRST_NAME_TOO_SHORT(InvalidField.FIRST_NAME, InvalidReason.TOO_SHORT),
+            FIRST_NAME_TOO_LONG(InvalidField.FIRST_NAME, InvalidReason.TOO_LONG),
+            LAST_NAME_EMPTY(InvalidField.LAST_NAME, InvalidReason.EMPTY),
+            LAST_NAME_TOO_SHORT(InvalidField.LAST_NAME, InvalidReason.TOO_SHORT),
+            LAST_NAME_TOO_LONG(InvalidField.LAST_NAME, InvalidReason.TOO_LONG),
+            BIRTHDATE_EMPTY(InvalidField.BIRTHDATE, InvalidReason.EMPTY),
+            BIRTHDATE_FUTURE(InvalidField.BIRTHDATE, InvalidReason.FUTURE_BIRTHDATE),
             ROLE_EMPTY(InvalidField.ROLE, InvalidReason.EMPTY);
 
             private final InvalidField field;
@@ -92,17 +123,19 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
         public enum InvalidField{
             USERNAME,
             PASSWORD,
-            EMAIL,
+            FIRST_NAME,
+            LAST_NAME,
+            BIRTHDATE,
             ROLE
         }
 
         public enum InvalidReason{
             EMPTY,
-            INVALID,
             TOO_SHORT,
             TOO_LONG,
             NON_UNIQUE,
-            CONTAINS_WHITESPACE
+            CONTAINS_WHITESPACE,
+            FUTURE_BIRTHDATE
         }
 
         public record ViolationDetails(InvalidField field, InvalidReason reason) {}

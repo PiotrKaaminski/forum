@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-class CommonsConfiguration {
+public class CommonsConfiguration {
 
     @Bean
     DateTimeProvider dateTimeProvider() {

@@ -19,8 +19,8 @@ public class UserService implements IUserService {
             return RegisterUserResult.fromValidationError(createUserResult.getError());
         }
         var user = createUserResult.getSuccess();
-        // walidacja Uniqueness username
 
+        userRepository.save(user);
         return RegisterUserResult.success(user.getId().value());
     }
 }

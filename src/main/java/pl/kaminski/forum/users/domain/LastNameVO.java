@@ -10,14 +10,14 @@ import pl.kaminski.forum.commons.result.ResultError;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsernameVO {
+public class LastNameVO {
 
     private static final int MIN_LENGTH = 3;
     private static final int MAX_LENGTH = 20;
 
     private String value;
 
-    public static Result<UsernameVO, Error> create(String value, Boolean notUnique) {
+    public static Result<LastNameVO, Error> create(String value) {
         if (!StringUtils.hasText(value)) {
             return Result.error(Error.EMPTY);
         }
@@ -27,19 +27,15 @@ public class UsernameVO {
         if (value.length() > MAX_LENGTH) {
             return Result.error(Error.TOO_LONG);
         }
-        if (notUnique) {
-            return Result.error(Error.NOT_UNIQUE);
-        }
-        return Result.success(new UsernameVO(value));
+        return Result.success(new LastNameVO(value));
     }
 
     @RequiredArgsConstructor
     @Getter
     public enum Error implements ResultError {
-        EMPTY("username cannot be empty"),
-        TOO_SHORT("username is too short, min length: " + MIN_LENGTH),
-        TOO_LONG("username is too long, max length: " + MAX_LENGTH),
-        NOT_UNIQUE("username is not unique");
+        EMPTY("lastName cannot be empty"),
+        TOO_SHORT("lastName is too short, min length: " + MIN_LENGTH),
+        TOO_LONG("lastName is too long, max length: " + MAX_LENGTH);
 
         private final String message;
     }

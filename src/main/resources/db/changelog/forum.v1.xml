@@ -23,7 +23,7 @@
         <column name="last_name" type="varchar(255)">
             <constraints nullable="false"/>
         </column>
-        <column name="birth_date" type="date">
+        <column name="birthdate" type="date">
             <constraints nullable="false"/>
         </column>
         <column name="creation_date" type="timestamp">

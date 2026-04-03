@@ -14,54 +14,47 @@ import java.time.ZoneId;
 @Data
 public class User {
 
-    @Id
+    @EmbeddedId
     @AttributeOverride(name = "value", column = @Column(name = "user_id"))
     private EntityId id;
     @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "username"))
     private UsernameVO username;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "password"))
     private PasswordVO password;
     @Embedded
-    private PersonalInfoVO personalInfo;
+    @AttributeOverride(name = "value", column = @Column(name = "first_name"))
+    private FirstNameVO firstName;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "last_name"))
+    private LastNameVO lastName;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "birthdate"))
+    private BirthDateVO birthdate;
     @Enumerated(EnumType.STRING)
     private Role role;
     private LocalDateTime creationDate;
 
-    //metoda ma zwracać nowe result.
-    public static User create(UsernameVO username, PasswordVO password, PersonalInfoVO personalInfo, Role role) {
-        // każde pole na VO i w nim walidacja z nowym result
-        var newUser = new User();
-        newUser.setId(EntityId.newId());
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        newUser.setPersonalInfo(personalInfo);
-        newUser.setRole(role);
-        newUser.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
-        return newUser;
-    }
-
-    //metoda ma zwracać nowe result.
-    public static Result<User, RegisterUserResult.ValidationError> createFromRequest(RegisterUserRequest request) {
+    public static Result<User, RegisterUserResult.ValidationError> createFromRequest(RegisterUserRequest request, DateTimeProvider dateTimeProvider, Boolean notUnique) {
         var validationErrorBuilder = RegisterUserResult.errorBuilder();
-        var personalInfo = PersonalInfoVO.create(request.firstName(), request.lastName(), request.birthDate());
-        var usernameVOResult = UsernameVO.create(request.username());
-        validationErrorBuilder.withUsernameVoResult(usernameVOResult);
+        var userBuilder = User.builder();
 
-        var passwordVOResult = PasswordVO.create(request.password());
-        validationErrorBuilder.withPasswordVoResult(passwordVOResult);
-        if (request.role() == null) {
-            validationErrorBuilder.withEmptyRole();
-        }
+        UsernameVO.create(request.username(), notUnique).process(userBuilder::username, validationErrorBuilder::withUsernameVoError);
+        PasswordVO.create(request.password()).process(userBuilder::password, validationErrorBuilder::withPasswordVoError);
+        FirstNameVO.create(request.firstName()).process(userBuilder::firstName, validationErrorBuilder::withFirstNameVoError);
+        LastNameVO.create(request.lastName()).process(userBuilder::lastName, validationErrorBuilder::withLastNameVoError);
+        BirthDateVO.create(request.birthDate()).process(userBuilder::birthdate, validationErrorBuilder::withBirthDateVoError);
+        Optional.ofNullable(request.role()).ifPresentOrElse(userBuilder::role, validationErrorBuilder::withEmptyRole);
+
         if (validationErrorBuilder.hasViolations()) {
             return Result.error(validationErrorBuilder.build());
         }
-        // każde pole na VO i w nim walidacja z nowym result
-        var newUser = new User();
-        newUser.setId(EntityId.newId());
-        newUser.setUsername(usernameVOResult.getSuccess());
-        newUser.setPassword(passwordVOResult.getSuccess());
-        newUser.setPersonalInfo(personalInfo);
-        newUser.setRole(request.role());
-        newUser.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
+
+        var newUser = userBuilder.id(EntityId.newId())
+                .creationDate(dateTimeProvider.currentDateTime())
+                .build();
+
         return Result.success(newUser);
     }
 }
