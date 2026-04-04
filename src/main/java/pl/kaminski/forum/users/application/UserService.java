@@ -23,11 +23,11 @@ public class UserService implements IUserService {
         if (createUserResult.isError()) {
             return RegisterUserResult.fromValidationError(createUserResult.getError());
         }
-        var existingUserId = userRepository.findIdByUsername(new UsernameVO(request.username()));
+        var user = createUserResult.getSuccess();
+        var existingUserId = userRepository.findIdByUsername(user.getUsername());
         if (existingUserId.isPresent()) {
             return RegisterUserResult.usernameNotUnique(existingUserId.get());
         }
-        var user = createUserResult.getSuccess();
         userRepository.save(user);
         return RegisterUserResult.success(user.getId().value());
     }

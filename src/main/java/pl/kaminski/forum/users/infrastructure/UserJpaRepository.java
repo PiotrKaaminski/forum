@@ -15,6 +15,5 @@ interface UserJpaRepository extends JpaRepository<User, EntityId> {
     @Query("SELECT u.id FROM User u WHERE u.username = :usernameVo")
     Optional<EntityId> findIdByUsername(UsernameVO usernameVo);
 
-    @Query("SELECT u FROM User u WHERE u.username = :usernameVo")
-    Optional<User> findByUsername(UsernameVO usernameVo);
+    Optional<User> findByUsername_Value(String username);
 }

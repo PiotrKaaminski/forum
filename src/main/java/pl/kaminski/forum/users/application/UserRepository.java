@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface UserRepository {
     Optional<EntityId> findIdByUsername(UsernameVO usernameVo);
-    Optional<User> findByUsername(UsernameVO usernameVo);
+    Optional<User> findByUsername(String username);
     void save(User user);
 }
