@@ -19,13 +19,15 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
     public static RegisterUserResult success(UUID id) {return new RegisterUserResult(new Success(id));}
     public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
     public static RegisterUserResult fromValidationError(ValidationError error) {return new RegisterUserResult(error);}
-    public static RegisterUserResult fromUserNotUniqueError(UsernameNotUnique error) {return new RegisterUserResult(error);}
+    public static RegisterUserResult usernameNotUnique(EntityId existingUserId) {
+        return new RegisterUserResult(new UsernameNotUnique(existingUserId.value()));
+    }
 
     public record Success(UUID id) {}
 
     public sealed interface Error extends ResultError { }
 
-    public record UsernameNotUnique(EntityId existingUserId) implements Error {
+    public record UsernameNotUnique(UUID existingUserId) implements Error {
         @Override
         public String getMessage() {
             return "Username is not unique " + existingUserId;

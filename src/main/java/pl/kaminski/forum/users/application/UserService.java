@@ -3,7 +3,6 @@ package pl.kaminski.forum.users.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestParam;
 import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.IUserService;
@@ -26,7 +25,7 @@ public class UserService implements IUserService {
         }
         var existingUserId = userRepository.findIdByUsername(new UsernameVO(request.username()));
         if (existingUserId.isPresent()) {
-            return RegisterUserResult.fromUserNotUniqueError(new RegisterUserResult.UsernameNotUnique(existingUserId.get()));
+            return RegisterUserResult.usernameNotUnique(existingUserId.get());
         }
         var user = createUserResult.getSuccess();
         userRepository.save(user);
