@@ -30,7 +30,7 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
     public record UsernameNotUnique(UUID existingUserId) implements Error {
         @Override
         public String getMessage() {
-            return "Username is not unique " + existingUserId;
+            return "Username is not unique";
         }
     }
 

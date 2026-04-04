@@ -1,9 +1,14 @@
 package pl.kaminski.forum.users.infrastructure;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.users.application.UserRepository;
+import pl.kaminski.forum.users.application.UserSecurityService;
 import pl.kaminski.forum.users.application.UserService;
+import pl.kaminski.forum.users.application.contract.IUserSecurityService;
+import pl.kaminski.forum.users.application.contract.IUserService;
+import pl.kaminski.forum.users.domain.security.JwtUtils;
 
 public class UserConfiguration {
 
@@ -13,7 +18,17 @@ public class UserConfiguration {
     }
 
     @Bean
-    UserService userService(UserRepository userRepository, DateTimeProvider dateTimeProvider) {
+    IUserService userService(UserRepository userRepository, DateTimeProvider dateTimeProvider) {
         return new UserService(userRepository, dateTimeProvider);
+    }
+
+    @Bean
+    IUserSecurityService userSecurityService() {
+        return new UserSecurityService();
+    }
+
+    @Bean
+    public JwtUtils jwtUtils(@Value( "${jwt.secret}") String secretKey) {
+        return new JwtUtils(secretKey);
     }
 }

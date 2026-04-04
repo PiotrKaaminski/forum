@@ -2,26 +2,28 @@ package pl.kaminski.forum.web.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import pl.kaminski.forum.security.UserSecurityService;
+import pl.kaminski.forum.users.application.contract.IUserSecurityService;
+import pl.kaminski.forum.users.domain.security.contract.LoginUserRequest;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.IUserService;
 import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 
     private final IUserService userService;
-    private final UserSecurityService userSecurityService;
+    private final IUserSecurityService IUserSecurityService;
 
-    @PostMapping("/user")
+    @PostMapping("/api/user")
     RegisterUserResult registerNewUser(@RequestBody RegisterUserRequest request) {
         return userService.registerNewUser(request);
     }
 
-    @GetMapping("/login")
-    public String login() {
-//        return userSecurityService.authenticate(username, password);
+    @PostMapping("/login")
+    public String login(@RequestBody LoginUserRequest request) {
+        // zwracane ma być nasze result.
+        // normalna, nowa autentykacja. Nie ta springowa
+        return null;
     }
 }

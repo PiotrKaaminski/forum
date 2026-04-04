@@ -10,7 +10,6 @@ import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 import pl.kaminski.forum.users.domain.User;
 import pl.kaminski.forum.users.domain.UsernameVO;
 
-@Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
 

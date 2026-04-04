@@ -1,4 +1,4 @@
-package pl.kaminski.forum.security;
+package pl.kaminski.forum.users.domain.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -6,10 +6,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
@@ -35,6 +37,8 @@ public class JWTFilter extends OncePerRequestFilter {
         if (username == null || !jwtUtils.isTokenValid(token)) {
             return null;
         }
-        return new UsernamePasswordAuthenticationToken(username, null, null);
+        // pobranie usera z bazy
+        // przypisanie odpowiedniego Authority(roli) na podstawie roli uzytkownika
+        return new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 }
