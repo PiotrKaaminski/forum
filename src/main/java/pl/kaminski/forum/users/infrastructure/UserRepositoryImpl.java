@@ -1,8 +1,12 @@
 package pl.kaminski.forum.users.infrastructure;
 
 import lombok.RequiredArgsConstructor;
+import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.users.application.UserRepository;
 import pl.kaminski.forum.users.domain.User;
+import pl.kaminski.forum.users.domain.UsernameVO;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
@@ -10,12 +14,17 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public Boolean isUsernameNotUnique(String username) {
-        return userJpaRepository.existsByUsername(username);
+    public Optional<EntityId> findIdByUsername(UsernameVO usernameVo) {
+        return userJpaRepository.findIdByUsername(usernameVo);
+    }
+
+    @Override
+    public Optional<User> findByUsername(UsernameVO usernameVo) {
+        return userJpaRepository.findByUsername(usernameVo);
     }
 
     @Override
     public void save(User user) {
-
+        userJpaRepository.save(user);
     }
 }

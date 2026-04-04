@@ -17,7 +17,7 @@ public class UsernameVO {
 
     private String value;
 
-    public static Result<UsernameVO, Error> create(String value, Boolean notUnique) {
+    public static Result<UsernameVO, Error> create(String value) {
         if (!StringUtils.hasText(value)) {
             return Result.error(Error.EMPTY);
         }
@@ -27,9 +27,6 @@ public class UsernameVO {
         if (value.length() > MAX_LENGTH) {
             return Result.error(Error.TOO_LONG);
         }
-        if (notUnique) {
-            return Result.error(Error.NOT_UNIQUE);
-        }
         return Result.success(new UsernameVO(value));
     }
 
@@ -38,8 +35,7 @@ public class UsernameVO {
     public enum Error implements ResultError {
         EMPTY("username cannot be empty"),
         TOO_SHORT("username is too short, min length: " + MIN_LENGTH),
-        TOO_LONG("username is too long, max length: " + MAX_LENGTH),
-        NOT_UNIQUE("username is not unique");
+        TOO_LONG("username is too long, max length: " + MAX_LENGTH);
 
         private final String message;
     }

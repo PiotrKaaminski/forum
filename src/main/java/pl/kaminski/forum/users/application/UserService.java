@@ -3,11 +3,13 @@ package pl.kaminski.forum.users.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.IUserService;
 import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 import pl.kaminski.forum.users.domain.User;
+import pl.kaminski.forum.users.domain.UsernameVO;
 
 @Service
 @RequiredArgsConstructor
@@ -18,12 +20,15 @@ public class UserService implements IUserService {
 
     public RegisterUserResult registerNewUser(RegisterUserRequest request) {
         Assert.notNull(request, "Request cannot be null");
-        var createUserResult = User.createFromRequest(request, dateTimeProvider, userRepository.isUsernameNotUnique(request.username()));
+        var createUserResult = User.createFromRequest(request, dateTimeProvider);
         if (createUserResult.isError()) {
             return RegisterUserResult.fromValidationError(createUserResult.getError());
         }
+        var existingUserId = userRepository.findIdByUsername(new UsernameVO(request.username()));
+        if (existingUserId.isPresent()) {
+            return RegisterUserResult.fromUserNotUniqueError(new RegisterUserResult.UsernameNotUnique(existingUserId.get()));
+        }
         var user = createUserResult.getSuccess();
-
         userRepository.save(user);
         return RegisterUserResult.success(user.getId().value());
     }

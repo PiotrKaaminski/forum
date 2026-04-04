@@ -41,11 +41,11 @@ public class User {
     private Role role;
     private LocalDateTime creationDate;
 
-    public static Result<User, RegisterUserResult.ValidationError> createFromRequest(RegisterUserRequest request, DateTimeProvider dateTimeProvider, Boolean notUnique) {
+    public static Result<User, RegisterUserResult.ValidationError> createFromRequest(RegisterUserRequest request, DateTimeProvider dateTimeProvider) {
         var validationErrorBuilder = RegisterUserResult.errorBuilder();
         var userBuilder = User.builder();
 
-        UsernameVO.create(request.username(), notUnique).process(userBuilder::username, validationErrorBuilder::withUsernameVoError);
+        UsernameVO.create(request.username()).process(userBuilder::username, validationErrorBuilder::withUsernameVoError);
         PasswordVO.create(request.password()).process(userBuilder::password, validationErrorBuilder::withPasswordVoError);
         FirstNameVO.create(request.firstName()).process(userBuilder::firstName, validationErrorBuilder::withFirstNameVoError);
         LastNameVO.create(request.lastName()).process(userBuilder::lastName, validationErrorBuilder::withLastNameVoError);

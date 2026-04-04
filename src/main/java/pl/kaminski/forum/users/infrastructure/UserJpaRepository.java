@@ -12,9 +12,9 @@ import java.util.Optional;
 @Repository
 interface UserJpaRepository extends JpaRepository<User, EntityId> {
 
-    @Query("SELECT u FROM User u WHERE u.username.value = :username")
-    Boolean existsByUsername(String username);
+    @Query("SELECT u.id FROM User u WHERE u.username = :usernameVo")
+    Optional<EntityId> findIdByUsername(UsernameVO usernameVo);
 
-    Boolean existsByUsername_Value(String username);
-    Boolean existsByUsername(UsernameVO username);
+    @Query("SELECT u FROM User u WHERE u.username = :usernameVo")
+    Optional<User> findByUsername(UsernameVO usernameVo);
 }

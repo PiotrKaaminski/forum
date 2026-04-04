@@ -1,10 +1,8 @@
 package pl.kaminski.forum.web.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.kaminski.forum.security.UserSecurityService;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.IUserService;
 import pl.kaminski.forum.users.application.contract.RegisterUserResult;
@@ -15,9 +13,15 @@ import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 public class UserController {
 
     private final IUserService userService;
+    private final UserSecurityService userSecurityService;
 
     @PostMapping("/user")
     RegisterUserResult registerNewUser(@RequestBody RegisterUserRequest request) {
         return userService.registerNewUser(request);
+    }
+
+    @GetMapping("/login")
+    public String login() {
+//        return userSecurityService.authenticate(username, password);
     }
 }

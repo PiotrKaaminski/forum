@@ -1,4 +1,4 @@
-package pl.kaminski.forum.web.security;
+package pl.kaminski.forum.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -19,6 +19,22 @@ public class JwtUtils {
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 7200000L))
                 .sign(Algorithm.HMAC256(secretKey));
+    }
+
+    public String extractUsername(String token) {
+        return getDecodedJWT(token).getSubject();
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            DecodedJWT jwt = JWT.require(Algorithm.HMAC256(secretKey))
+                    .build()
+                    .verify(token);
+
+            return !jwt.getExpiresAt().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private DecodedJWT getDecodedJWT(String token) {

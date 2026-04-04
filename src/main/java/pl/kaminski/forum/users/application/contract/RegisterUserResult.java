@@ -1,6 +1,7 @@
 package pl.kaminski.forum.users.application.contract;
 
 import lombok.RequiredArgsConstructor;
+import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.AbstractInputValidationError;
 import pl.kaminski.forum.commons.result.Result;
 import pl.kaminski.forum.commons.result.ResultError;
@@ -18,10 +19,18 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
     public static RegisterUserResult success(UUID id) {return new RegisterUserResult(new Success(id));}
     public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
     public static RegisterUserResult fromValidationError(ValidationError error) {return new RegisterUserResult(error);}
+    public static RegisterUserResult fromUserNotUniqueError(UsernameNotUnique error) {return new RegisterUserResult(error);}
 
     public record Success(UUID id) {}
 
     public sealed interface Error extends ResultError { }
+
+    public record UsernameNotUnique(EntityId existingUserId) implements Error {
+        @Override
+        public String getMessage() {
+            return "Username is not unique " + existingUserId;
+        }
+    }
 
     public static final class ValidationError extends AbstractInputValidationError<ValidationError.ViolationError, ValidationError.ViolationDetails> implements Error {
 
@@ -36,7 +45,6 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
                     case EMPTY -> ViolationError.USERNAME_EMPTY;
                     case TOO_LONG -> ViolationError.USERNAME_TOO_LONG;
                     case TOO_SHORT -> ViolationError.USERNAME_TOO_SHORT;
-                    case NOT_UNIQUE -> ViolationError.USERNAME_NOT_UNIQUE;
                 };
                 withViolation(violation);
             }
@@ -96,7 +104,6 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
             USERNAME_EMPTY(InvalidField.USERNAME, InvalidReason.EMPTY),
             USERNAME_TOO_SHORT(InvalidField.USERNAME, InvalidReason.TOO_SHORT),
             USERNAME_TOO_LONG(InvalidField.USERNAME, InvalidReason.TOO_LONG),
-            USERNAME_NOT_UNIQUE(InvalidField.USERNAME, InvalidReason.NON_UNIQUE),
             PASSWORD_EMPTY(InvalidField.PASSWORD, InvalidReason.EMPTY),
             PASSWORD_TOO_SHORT(InvalidField.PASSWORD, InvalidReason.TOO_SHORT),
             PASSWORD_TOO_LONG(InvalidField.PASSWORD, InvalidReason.TOO_LONG),
@@ -135,4 +142,5 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
 
         public record ViolationDetails(InvalidField field, InvalidReason reason) {}
     }
+//    public static final class  UsernameNotUnique extends AbstractInputValidationError implements Error { }
 }
