@@ -30,5 +30,8 @@
             <constraints nullable="false"/>
         </column>
     </createTable>
+    <createIndex tableName="users" indexName="users_username_idx">
+        <column name="username"/>
+    </createIndex>
 </changeSet>
 </databaseChangeLog>

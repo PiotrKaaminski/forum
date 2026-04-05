@@ -57,7 +57,7 @@ public class SecurityConfiguration {
     private void authorizeRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
         registry.requestMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-//                .requestMatchers("/api/**").authenticated()
+                .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll();
     }
 
