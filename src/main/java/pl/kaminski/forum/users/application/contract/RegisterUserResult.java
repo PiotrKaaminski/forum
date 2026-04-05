@@ -144,5 +144,4 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
 
         public record ViolationDetails(InvalidField field, InvalidReason reason) {}
     }
-//    public static final class  UsernameNotUnique extends AbstractInputValidationError implements Error { }
 }

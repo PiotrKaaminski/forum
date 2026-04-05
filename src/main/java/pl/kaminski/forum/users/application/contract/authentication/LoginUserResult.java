@@ -1,4 +1,4 @@
-package pl.kaminski.forum.users.application.security.contract;
+package pl.kaminski.forum.users.application.contract.authentication;
 
 import pl.kaminski.forum.commons.result.Result;
 import pl.kaminski.forum.commons.result.ResultError;

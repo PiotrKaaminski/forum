@@ -7,6 +7,7 @@ import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.IUserService;
 import pl.kaminski.forum.users.application.contract.RegisterUserResult;
+import pl.kaminski.forum.users.domain.PasswordVO;
 import pl.kaminski.forum.users.domain.User;
 import pl.kaminski.forum.users.domain.UsernameVO;
 

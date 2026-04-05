@@ -1,6 +1,5 @@
 package pl.kaminski.forum.web.security;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,8 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pl.kaminski.forum.users.domain.security.JWTFilter;
-import pl.kaminski.forum.users.domain.security.JwtUtils;
+import pl.kaminski.forum.users.infrastructure.JWTFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,14 +31,6 @@ public class SecurityConfiguration {
             // metrics
             "/actuator/**"
     };
-
-
-
-    @Bean
-    JWTFilter jwtFilter(JwtUtils jwtUtils) {
-        return new JWTFilter(jwtUtils);
-    }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JWTFilter jwtFilter) throws Exception {

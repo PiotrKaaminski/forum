@@ -1,4 +1,4 @@
-package pl.kaminski.forum.users.domain.security;
+package pl.kaminski.forum.users.application;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
