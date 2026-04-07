@@ -48,6 +48,7 @@ public class SecurityConfiguration {
         registry.requestMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
                 .requestMatchers("/api/**").authenticated()
+                .requestMatchers(HttpMethod.PATCH, "/api/category/**").hasRole("ADMIN")
                 .anyRequest().permitAll();
     }
 

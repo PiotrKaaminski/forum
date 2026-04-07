@@ -3,35 +3,58 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
 
-<changeSet id="1" author="PD">
-    <createTable tableName="users">
-        <column name="user_id" type="uuid" defaultValueComputed="gen_random_uuid()">
-            <constraints primaryKey="true" primaryKeyName="users_pk"/>
-        </column>
-        <column name="username" type="varchar(255)">
-            <constraints nullable="false" unique="true"/>
-        </column>
-        <column name="password" type="varchar(255)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="role" type="varchar(63)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="first_name" type="varchar(255)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="last_name" type="varchar(255)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="birthdate" type="date">
-            <constraints nullable="false"/>
-        </column>
-        <column name="creation_date" type="timestamp">
-            <constraints nullable="false"/>
-        </column>
-    </createTable>
-    <createIndex tableName="users" indexName="users_username_idx">
-        <column name="username"/>
-    </createIndex>
-</changeSet>
+    <changeSet id="1" author="PD">
+        <createTable tableName="users">
+            <column name="user_id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" primaryKeyName="users_pk"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birthdate" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="users" indexName="users_username_idx">
+            <column name="username"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="2" author="PD">
+        <createTable tableName="categories">
+            <column name="category_id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" unique="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_id" type="uuid">
+                <constraints references="categories(category_id)" foreignKeyName="categories_parent_fk"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint
+                tableName="categories"
+                columnNames="parent_id, name"
+                constraintName="uk_categories_parent_name"/>
+
+        <sql dbms="postgresql">
+            CREATE UNIQUE INDEX ux_categories_root_name
+                ON categories (name)
+                WHERE parent_id IS NULL;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

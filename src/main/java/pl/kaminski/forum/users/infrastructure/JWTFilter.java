@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.kaminski.forum.users.application.JwtUtils;
+import pl.kaminski.forum.users.application.IUserRepository;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.Collections;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
+    private final IUserRepository IUserRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -38,8 +40,11 @@ public class JWTFilter extends OncePerRequestFilter {
         if (username == null || !jwtUtils.isTokenValid(token)) {
             return null;
         }
-        // pobranie usera z bazy
-        // przypisanie odpowiedniego Authority(roli) na podstawie roli uzytkownika
-        return new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+        var user = IUserRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            return null;
+        }
+        var userRole = user.get().getRole();
+        return new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole)));
     }
 }

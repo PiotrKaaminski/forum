@@ -6,7 +6,7 @@ import pl.kaminski.forum.users.domain.UsernameVO;
 
 import java.util.Optional;
 
-public interface UserRepository {
+public interface IUserRepository {
     Optional<EntityId> findIdByUsername(UsernameVO usernameVo);
     Optional<User> findByUsername(String username);
     void save(User user);
