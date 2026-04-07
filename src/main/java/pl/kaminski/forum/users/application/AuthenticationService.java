@@ -9,14 +9,14 @@ import pl.kaminski.forum.users.application.contract.authentication.LoginUserRequ
 @RequiredArgsConstructor
 public class AuthenticationService implements IAuthenticationService {
 
-    private final IUserRepository IUserRepository;
+    private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
     @Override
     public LoginUserResult login(LoginUserRequest request) {
 
-        var userOptional = IUserRepository.findByUsername(request.username());
+        var userOptional = userRepository.findByUsername(request.username());
         if (userOptional.isEmpty()) {
             return LoginUserResult.badCredentials();
         }

@@ -14,15 +14,15 @@ import pl.kaminski.forum.users.application.JwtUtils;
 
 public class UserConfiguration {
 
-    private final IUserRepository IUserRepository;
+    private final IUserRepository userRepository;
 
     UserConfiguration(UserJpaRepository userJpaRepository) {
-        this.IUserRepository = new UserRepository(userJpaRepository);
+        this.userRepository = new UserRepository(userJpaRepository);
     }
 
     @Bean
     IUserService userService(DateTimeProvider dateTimeProvider) {
-        return new UserService(IUserRepository, dateTimeProvider);
+        return new UserService(userRepository, dateTimeProvider);
     }
 
     @Bean
@@ -32,12 +32,12 @@ public class UserConfiguration {
 
     @Bean
     IAuthenticationService userSecurityService(PasswordEncoder bCryptPasswordEncoder, JwtUtils jwtUtils) {
-        return new AuthenticationService(IUserRepository, bCryptPasswordEncoder, jwtUtils);
+        return new AuthenticationService(userRepository, bCryptPasswordEncoder, jwtUtils);
     }
 
     @Bean
     JWTFilter jwtFilter(JwtUtils jwtUtils) {
-        return new JWTFilter(jwtUtils, IUserRepository);
+        return new JWTFilter(jwtUtils, userRepository);
     }
 
     @Bean

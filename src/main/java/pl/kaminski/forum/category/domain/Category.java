@@ -7,8 +7,6 @@ import pl.kaminski.forum.category.application.contract.CreateCategoryResult;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.Result;
 
-import java.util.Optional;
-
 @Entity
 @Data
 @Table(name = "categories")
@@ -21,11 +19,10 @@ public class Category {
     @AttributeOverride(name = "value", column = @Column(name = "category_id"))
     private EntityId id;
     private CategoryNameVO name;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+    @AttributeOverride(name = "value", column = @Column(name = "parent_id"))
+    private EntityId parentId;
 
-    public static Result<Category, CreateCategoryResult.ValidationError> createFromRequest(CreateCategoryRequest request, Category parent) {
+    public static Result<Category, CreateCategoryResult.ValidationError> createFromRequest(CreateCategoryRequest request, EntityId parentId) {
         var validationErrorBuilder = CreateCategoryResult.errorBuilder();
         var categoryBuilder = Category.builder();
 
@@ -35,7 +32,7 @@ public class Category {
             return Result.error(validationErrorBuilder.build());
         }
 
-        return Result.success(categoryBuilder.parent(parent).id(EntityId.newId()).build());
+        return Result.success(categoryBuilder.parentId(parentId).id(EntityId.newId()).build());
     }
     public static Result<Category, CreateCategoryResult.ValidationError> modifyCategory(CreateCategoryRequest request) {
         return null;

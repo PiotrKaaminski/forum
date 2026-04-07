@@ -19,7 +19,7 @@ import java.util.Collections;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
-    private final IUserRepository IUserRepository;
+    private final IUserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -40,11 +40,11 @@ public class JWTFilter extends OncePerRequestFilter {
         if (username == null || !jwtUtils.isTokenValid(token)) {
             return null;
         }
-        var user = IUserRepository.findByUsername(username);
-        if (user.isEmpty()) {
+        var userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
             return null;
         }
-        var userRole = user.get().getRole();
+        var userRole = userOptional.get().getRole();
         return new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole)));
     }
 }

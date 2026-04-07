@@ -11,7 +11,7 @@ import pl.kaminski.forum.users.domain.User;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
 
-    private final IUserRepository IUserRepository;
+    private final IUserRepository userRepository;
     private final DateTimeProvider dateTimeProvider;
 
     public RegisterUserResult registerNewUser(RegisterUserRequest request) {
@@ -21,11 +21,11 @@ public class UserService implements IUserService {
             return RegisterUserResult.fromValidationError(createUserResult.getError());
         }
         var user = createUserResult.getSuccess();
-        var existingUserId = IUserRepository.findIdByUsername(user.getUsername());
+        var existingUserId = userRepository.findIdByUsername(user.getUsername());
         if (existingUserId.isPresent()) {
             return RegisterUserResult.usernameNotUnique(existingUserId.get());
         }
-        IUserRepository.save(user);
+        userRepository.save(user);
         return RegisterUserResult.success(user.getId().value());
     }
 }
