@@ -14,6 +14,8 @@ public class CategoryService implements ICategoryService {
     @Override
     public CreateCategoryResult createCategory(CreateCategoryRequest request) {
         Assert.notNull(request, "Request cannot be null");
+//        assert request != null : "Request cannot be null";
+
         EntityId parentId = null;
         if (request.parentId() != null) {
             parentId = categoryRepository.findById(EntityId.from(request.parentId())).map(Category::getId).orElse(null);
