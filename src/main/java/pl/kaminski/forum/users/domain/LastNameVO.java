@@ -15,9 +15,9 @@ public class LastNameVO {
     private static final int MIN_LENGTH = 3;
     private static final int MAX_LENGTH = 20;
 
-    private String value;
+    private String lastName;
 
-    public static Result<LastNameVO, Error> create(String value) {
+    static Result<LastNameVO, Error> create(String value) {
         if (!StringUtils.hasText(value)) {
             return Result.error(Error.EMPTY);
         }

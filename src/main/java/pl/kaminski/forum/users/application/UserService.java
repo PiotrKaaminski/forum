@@ -6,17 +6,19 @@ import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.IUserService;
 import pl.kaminski.forum.users.application.contract.RegisterUserResult;
-import pl.kaminski.forum.users.domain.User;
+import pl.kaminski.forum.users.domain.IUserRepository;
+import pl.kaminski.forum.users.domain.UserFactory;
 
 @RequiredArgsConstructor
 public class UserService implements IUserService {
 
     private final IUserRepository userRepository;
     private final DateTimeProvider dateTimeProvider;
+    private final UserFactory userFactory;
 
     public RegisterUserResult registerNewUser(RegisterUserRequest request) {
         Assert.notNull(request, "Request cannot be null");
-        var createUserResult = User.createFromRequest(request, dateTimeProvider);
+        var createUserResult = userFactory.createNewUser(request);
         if (createUserResult.isError()) {
             return RegisterUserResult.fromValidationError(createUserResult.getError());
         }

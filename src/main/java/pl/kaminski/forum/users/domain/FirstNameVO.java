@@ -17,7 +17,7 @@ public class FirstNameVO {
 
     private String value;
 
-    public static Result<FirstNameVO, Error> create(String value) {
+    static Result<FirstNameVO, Error> create(String value) {
         if (!StringUtils.hasText(value)) {
             return Result.error(Error.EMPTY);
         }

@@ -15,9 +15,9 @@ import java.time.LocalDate;
 public class BirthDateVO {
 
 
-    private LocalDate value;
+    private LocalDate birthdate;
 
-    public static Result<BirthDateVO, Error> create(LocalDate value) {
+    static Result<BirthDateVO, Error> create(LocalDate value) {
         if (value == null) {
             return Result.error(Error.EMPTY);
         }

@@ -5,34 +5,35 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.kaminski.forum.commons.DateTimeProvider;
-import pl.kaminski.forum.users.application.IUserRepository;
+import pl.kaminski.forum.users.domain.IUserRepository;
 import pl.kaminski.forum.users.application.AuthenticationService;
 import pl.kaminski.forum.users.application.UserService;
 import pl.kaminski.forum.users.application.contract.authentication.IAuthenticationService;
 import pl.kaminski.forum.users.application.contract.IUserService;
 import pl.kaminski.forum.users.application.JwtUtils;
+import pl.kaminski.forum.users.domain.UserFactory;
 
 public class UserConfiguration {
 
     private final IUserRepository userRepository;
+    private final UserFactory userFactory;
+    private final PasswordEncoder passwordEncoder;
 
-    UserConfiguration(UserJpaRepository userJpaRepository) {
+    UserConfiguration(UserJpaRepository userJpaRepository, DateTimeProvider dateTimeProvider) {
         this.userRepository = new UserRepository(userJpaRepository);
+        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.userFactory = new UserFactory(userRepository, dateTimeProvider, passwordEncoder);
+
     }
 
     @Bean
     IUserService userService(DateTimeProvider dateTimeProvider) {
-        return new UserService(userRepository, dateTimeProvider);
+        return new UserService(userRepository, dateTimeProvider, userFactory);
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    IAuthenticationService userSecurityService(PasswordEncoder bCryptPasswordEncoder, JwtUtils jwtUtils) {
-        return new AuthenticationService(userRepository, bCryptPasswordEncoder, jwtUtils);
+    IAuthenticationService userSecurityService(JwtUtils jwtUtils) {
+        return new AuthenticationService(userRepository, passwordEncoder, jwtUtils);
     }
 
     @Bean

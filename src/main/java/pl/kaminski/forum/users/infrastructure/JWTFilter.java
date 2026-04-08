@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.kaminski.forum.users.application.JwtUtils;
-import pl.kaminski.forum.users.application.IUserRepository;
+import pl.kaminski.forum.users.domain.IUserRepository;
 
 import java.io.IOException;
 import java.util.Collections;

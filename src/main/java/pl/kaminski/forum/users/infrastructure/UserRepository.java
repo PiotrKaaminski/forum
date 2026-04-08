@@ -2,7 +2,7 @@ package pl.kaminski.forum.users.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.commons.EntityId;
-import pl.kaminski.forum.users.application.IUserRepository;
+import pl.kaminski.forum.users.domain.IUserRepository;
 import pl.kaminski.forum.users.domain.User;
 import pl.kaminski.forum.users.domain.UsernameVO;
 

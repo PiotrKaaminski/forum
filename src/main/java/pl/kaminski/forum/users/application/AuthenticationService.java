@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.kaminski.forum.users.application.contract.authentication.IAuthenticationService;
 import pl.kaminski.forum.users.application.contract.authentication.LoginUserResult;
 import pl.kaminski.forum.users.application.contract.authentication.LoginUserRequest;
+import pl.kaminski.forum.users.domain.IUserRepository;
 
 @RequiredArgsConstructor
 public class AuthenticationService implements IAuthenticationService {

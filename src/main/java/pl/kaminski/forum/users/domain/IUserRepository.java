@@ -1,8 +1,6 @@
-package pl.kaminski.forum.users.application;
+package pl.kaminski.forum.users.domain;
 
 import pl.kaminski.forum.commons.EntityId;
-import pl.kaminski.forum.users.domain.User;
-import pl.kaminski.forum.users.domain.UsernameVO;
 
 import java.util.Optional;
 
