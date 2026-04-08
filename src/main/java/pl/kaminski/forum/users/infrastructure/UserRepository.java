@@ -1,7 +1,6 @@
 package pl.kaminski.forum.users.infrastructure;
 
 import lombok.RequiredArgsConstructor;
-import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.users.domain.IUserRepository;
 import pl.kaminski.forum.users.domain.User;
 import pl.kaminski.forum.users.domain.UsernameVO;
@@ -14,13 +13,13 @@ public class UserRepository implements IUserRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public Optional<EntityId> findIdByUsername(UsernameVO usernameVo) {
-        return userJpaRepository.findIdByUsername(usernameVo);
+    public boolean existsByUsername(UsernameVO usernameVo) {
+        return userJpaRepository.existsByUsername(usernameVo);
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return userJpaRepository.findByUsername_Value(username);
+        return userJpaRepository.findByUsername_Username(username);
     }
 
     @Override

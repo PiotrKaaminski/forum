@@ -22,13 +22,10 @@ public class AuthenticationService implements IAuthenticationService {
             return LoginUserResult.badCredentials();
         }
         var user = userOptional.get();
-//        if (!passwordEncoder.matches(request.password(), user.get().getPassword().getValue())) {
-//            return LoginUserResult.badCredentials();
-//        }
-        if (!request.password().equals(user.getPassword().getValue())) {
+        if (user.passwordDoesNotMatch(request.password(), passwordEncoder)) {
             return LoginUserResult.badCredentials();
         }
-        var jwtToken = jwtUtils.generateToken(user.getUsername().getValue());
+        var jwtToken = jwtUtils.generateToken(user.getUsername());
         return LoginUserResult.success(jwtToken);
 
     }

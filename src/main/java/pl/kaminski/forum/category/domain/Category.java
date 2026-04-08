@@ -26,7 +26,7 @@ public class Category {
         var validationErrorBuilder = CreateCategoryResult.errorBuilder();
         var categoryBuilder = Category.builder();
 
-        CategoryNameVO.create(request.name()).process(categoryBuilder::name, validationErrorBuilder::withCategoryNameVoError);
+        CategoryNameVO.create(request.name()).handle(categoryBuilder::name, validationErrorBuilder::withCategoryNameVoError);
 
         if (validationErrorBuilder.hasViolations()) {
             return Result.error(validationErrorBuilder.build());

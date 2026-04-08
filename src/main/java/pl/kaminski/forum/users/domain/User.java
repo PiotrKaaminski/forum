@@ -2,6 +2,7 @@ package pl.kaminski.forum.users.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.kaminski.forum.commons.EntityId;
 
 import java.time.LocalDateTime;
@@ -27,4 +28,7 @@ public class User {
     private Role role;
     private LocalDateTime creationDate;
 
+    public boolean passwordDoesNotMatch(String password, PasswordEncoder passwordEncoder) {
+        return !passwordEncoder.matches(password, this.password.getPassword());
+    }
 }

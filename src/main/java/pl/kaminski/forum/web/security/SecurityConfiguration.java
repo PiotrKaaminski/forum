@@ -47,8 +47,10 @@ public class SecurityConfiguration {
     private void authorizeRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
         registry.requestMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers("/api/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/api/category/**").hasRole("ADMIN")
+                .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll();
     }
 

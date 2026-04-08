@@ -16,12 +16,12 @@ public class UserController {
     private final IUserService userService;
     private final IAuthenticationService userSecurityService;
 
-    @PostMapping("/api/user")
+    @PostMapping("/api/users")
     RegisterUserResult registerNewUser(@RequestBody RegisterUserRequest request) {
         return userService.registerNewUser(request);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public LoginUserResult login(@RequestBody LoginUserRequest request) {
         return userSecurityService.login(request);
     }

@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
+import pl.kaminski.forum.users.domain.UsernameVO;
 
 import java.util.Date;
 
@@ -13,9 +14,9 @@ public class JwtUtils {
 
     private final String secretKey;
 
-    public String generateToken(String username) {
+    public String generateToken(UsernameVO usernameVO) {
         return JWT.create()
-                .withSubject(username)
+                .withSubject(usernameVO.getUsername())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 7200000L))
                 .sign(Algorithm.HMAC256(secretKey));

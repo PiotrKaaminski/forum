@@ -2,6 +2,7 @@ package pl.kaminski.forum.users.domain;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import pl.kaminski.forum.commons.result.Result;
 import pl.kaminski.forum.commons.result.ResultError;
@@ -17,7 +18,7 @@ public class PasswordVO {
 
     private String password;
 
-    static Result<PasswordVO, Error> create(String value) {
+    static Result<PasswordVO, Error> create(String value, PasswordEncoder passwordEncoder) {
         if (!StringUtils.hasText(value)) {
             return Result.error(Error.EMPTY);
         }
@@ -30,7 +31,7 @@ public class PasswordVO {
         if (StringUtils.containsWhitespace(value)) {
             return Result.error(Error.CONTAINS_WHITESPACE);
         }
-        return Result.success(new PasswordVO(value));
+        return Result.success(new PasswordVO(passwordEncoder.encode(value)));
     }
 
     @RequiredArgsConstructor

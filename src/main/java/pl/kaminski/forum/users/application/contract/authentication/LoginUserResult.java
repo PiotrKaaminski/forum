@@ -11,7 +11,7 @@ public class LoginUserResult extends Result<LoginUserResult.Success, LoginUserRe
     public static LoginUserResult success(String jwtToken) {return new LoginUserResult(new Success(jwtToken));}
     public static LoginUserResult badCredentials() {return new LoginUserResult(new BadCredentials());}
 
-    public record Success(String JwtToken) {}
+    public record Success(String jwtToken) {}
     public record BadCredentials() implements ResultError {
         @Override
         public String getMessage() {

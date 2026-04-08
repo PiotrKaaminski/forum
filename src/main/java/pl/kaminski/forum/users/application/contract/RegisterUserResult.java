@@ -1,40 +1,26 @@
 package pl.kaminski.forum.users.application.contract;
 
 import lombok.RequiredArgsConstructor;
-import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.AbstractInputValidationError;
 import pl.kaminski.forum.commons.result.Result;
-import pl.kaminski.forum.commons.result.ResultError;
 import pl.kaminski.forum.users.domain.*;
 
 import java.util.Map;
 import java.util.UUID;
 
-public class RegisterUserResult extends Result<RegisterUserResult.Success, RegisterUserResult.Error> {
+public class RegisterUserResult extends Result<RegisterUserResult.Success, RegisterUserResult.ValidationError> {
 
     private RegisterUserResult(Success success) {super(success);}
 
-    private RegisterUserResult(Error error) {super(error);}
+    private RegisterUserResult(ValidationError error) {super(error);}
 
     public static RegisterUserResult success(UUID id) {return new RegisterUserResult(new Success(id));}
     public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
     public static RegisterUserResult fromValidationError(ValidationError error) {return new RegisterUserResult(error);}
-    public static RegisterUserResult usernameNotUnique(EntityId existingUserId) {
-        return new RegisterUserResult(new UsernameNotUnique(existingUserId.value()));
-    }
 
     public record Success(UUID id) {}
 
-    public sealed interface Error extends ResultError { }
-
-    public record UsernameNotUnique(UUID existingUserId) implements Error {
-        @Override
-        public String getMessage() {
-            return "Username is not unique";
-        }
-    }
-
-    public static final class ValidationError extends AbstractInputValidationError<ValidationError.ViolationError, ValidationError.ViolationDetails> implements Error {
+    public static final class ValidationError extends AbstractInputValidationError<ValidationError.ViolationError, ValidationError.ViolationDetails> {
 
         public ValidationError(Map<ViolationError, ViolationDetails> violations) {
             super(violations);
@@ -49,6 +35,10 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
                     case TOO_SHORT -> ViolationError.USERNAME_TOO_SHORT;
                 };
                 withViolation(violation);
+            }
+
+            public void withUsernameNotUnique() {
+                withViolation(ViolationError.USERNAME_NON_UNIQUE);
             }
 
             public void withPasswordVoError(PasswordVO.Error error) {
@@ -106,6 +96,7 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
             USERNAME_EMPTY(InvalidField.USERNAME, InvalidReason.EMPTY),
             USERNAME_TOO_SHORT(InvalidField.USERNAME, InvalidReason.TOO_SHORT),
             USERNAME_TOO_LONG(InvalidField.USERNAME, InvalidReason.TOO_LONG),
+            USERNAME_NON_UNIQUE(InvalidField.USERNAME, InvalidReason.NON_UNIQUE),
             PASSWORD_EMPTY(InvalidField.PASSWORD, InvalidReason.EMPTY),
             PASSWORD_TOO_SHORT(InvalidField.PASSWORD, InvalidReason.TOO_SHORT),
             PASSWORD_TOO_LONG(InvalidField.PASSWORD, InvalidReason.TOO_LONG),

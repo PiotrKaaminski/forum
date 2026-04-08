@@ -39,7 +39,7 @@ public class Result<S, E extends ResultError> {
 
     public boolean isError() {return !isSuccess;}
 
-    public void process(Consumer<S> successConsumer, Consumer<E> errorConsumer) {
+    public void handle(Consumer<S> successConsumer, Consumer<E> errorConsumer) {
         if (isSuccess) {
             successConsumer.accept(success);
         } else {
