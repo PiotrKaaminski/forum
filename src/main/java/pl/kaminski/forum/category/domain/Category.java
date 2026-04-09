@@ -4,8 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import pl.kaminski.forum.category.application.contract.CreateCategoryRequest;
 import pl.kaminski.forum.category.application.contract.CreateCategoryResult;
+import pl.kaminski.forum.category.application.contract.ModifyCategoryRequest;
+import pl.kaminski.forum.category.application.contract.ModifyCategoryResult;
+import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.Result;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -21,8 +26,11 @@ public class Category {
     private CategoryNameVO name;
     @AttributeOverride(name = "value", column = @Column(name = "parent_id"))
     private EntityId parentId;
+    private LocalDateTime createdAt;
+    @AttributeOverride(name = "value", column = @Column(name = "created_by"))
+    private EntityId createdBy;
 
-    public static Result<Category, CreateCategoryResult.ValidationError> createFromRequest(CreateCategoryRequest request, EntityId parentId) {
+    public static Result<Category, CreateCategoryResult.ValidationError> createFromRequest(CreateCategoryRequest request, EntityId parentId, EntityId userId, DateTimeProvider dateTimeProvider) {
         var validationErrorBuilder = CreateCategoryResult.errorBuilder();
         var categoryBuilder = Category.builder();
 
@@ -32,9 +40,17 @@ public class Category {
             return Result.error(validationErrorBuilder.build());
         }
 
-        return Result.success(categoryBuilder.parentId(parentId).id(EntityId.newId()).build());
+        return Result.success(categoryBuilder.parentId(parentId).id(EntityId.newId()).createdAt(dateTimeProvider.currentDateTime()).createdBy(userId).build());
     }
-    public static Result<Category, CreateCategoryResult.ValidationError> modifyCategory(CreateCategoryRequest request) {
-        return null;
+    public Result<Category, ModifyCategoryResult.ValidationError> modifyCategory(ModifyCategoryRequest request) {
+        var validationErrorBuilder = ModifyCategoryResult.errorBuilder();
+
+        CategoryNameVO.create(request.name()).handle(this::setName, validationErrorBuilder::withCategoryNameVoError);
+
+        if (validationErrorBuilder.hasViolations()) {
+            return Result.error(validationErrorBuilder.build());
+        }
+
+        return Result.success(this);
     }
 }

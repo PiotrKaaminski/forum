@@ -12,7 +12,9 @@ import java.util.Optional;
 @Repository
 public interface CategoryJpaRepository extends JpaRepository<Category, EntityId> {
 
-
     @Query("SELECT c.id FROM Category c WHERE c.name = :categoryNameVO AND c.parentId = :parentId")
     Optional<EntityId> findIdByNameAndParentId(CategoryNameVO categoryNameVO, EntityId parentId);
+
+    @Query("SELECT c.id FROM Category c WHERE c.name = :categoryNameVO and c.parentId is null")
+    Optional<EntityId> findIdByNameAndNullParent(CategoryNameVO categoryNameVO);
 }

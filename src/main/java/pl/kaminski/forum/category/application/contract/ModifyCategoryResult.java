@@ -14,14 +14,16 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
 
     private ModifyCategoryResult(Success success) {super(success);}
     private ModifyCategoryResult(Error error) {super(error);}
-    public static ModifyCategoryResult success(UUID id) {return new ModifyCategoryResult(new Success(id));}
+    public static ModifyCategoryResult success(String name) {return new ModifyCategoryResult(new Success(name));}
     public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
     public static ModifyCategoryResult fromValidationError(ValidationError error) {return new ModifyCategoryResult(error);}
-    public static ModifyCategoryResult categoryNameNotUnique(EntityId id) {return new ModifyCategoryResult(new ParentCategoryNotExists(id.value()));}
+    public static ModifyCategoryResult categoryNameNotUnique(EntityId id) {return new ModifyCategoryResult(new CategoryNameNotUnique(id.value()));}
+    public static ModifyCategoryResult categoryNotFound(EntityId id) {return new ModifyCategoryResult(new CategoryNotFound(id.value()));}
 
-    public record Success(UUID id) { }
+    public record Success(String name) { }
 
     public sealed interface Error extends ResultError { }
+
     public record CategoryNameNotUnique(UUID id) implements Error {
         @Override
         public String getMessage() {
@@ -32,6 +34,13 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
         @Override
         public String getMessage() {
             return "parent category with given id does not exist";
+        }
+    }
+
+    public record CategoryNotFound(UUID id) implements Error {
+        @Override
+        public String getMessage() {
+            return "category with given id does not exist";
         }
     }
 

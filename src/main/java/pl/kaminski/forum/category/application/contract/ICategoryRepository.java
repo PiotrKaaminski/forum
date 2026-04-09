@@ -1,4 +1,4 @@
-package pl.kaminski.forum.category.application;
+package pl.kaminski.forum.category.application.contract;
 
 import pl.kaminski.forum.category.domain.Category;
 import pl.kaminski.forum.category.domain.CategoryNameVO;

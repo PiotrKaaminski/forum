@@ -2,7 +2,9 @@ package pl.kaminski.forum.category.infrastructure;
 
 import org.springframework.context.annotation.Bean;
 import pl.kaminski.forum.category.application.CategoryService;
-import pl.kaminski.forum.category.application.ICategoryRepository;
+import pl.kaminski.forum.category.application.contract.ICategoryRepository;
+import pl.kaminski.forum.commons.DateTimeProvider;
+import pl.kaminski.forum.users.application.contract.IUserService;
 
 public class CategoryConfiguration {
 
@@ -12,9 +14,8 @@ public class CategoryConfiguration {
         this.ICategoryRepository = new CategoryRepository(categoryJpaRepository);
     }
 
-
     @Bean
-    CategoryService categoryService() {
-        return new CategoryService(ICategoryRepository);
+    CategoryService categoryService(DateTimeProvider dateTimeProvider, IUserService userService) {
+        return new CategoryService(ICategoryRepository, dateTimeProvider, userService);
     }
 }

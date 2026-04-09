@@ -43,20 +43,47 @@
                 <constraints nullable="false"/>
             </column>
             <column name="parent_id" type="uuid">
-                <constraints references="categories(category_id)" foreignKeyName="categories_parent_fk"/>
+                <constraints references="categories(category_id)" foreignKeyName="categories_parent_id_fk"/>
             </column>
-<!--            todo data utworzenia kategorii i powiązanie z userem który ją stworzył-->
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" references="users(user_id)" foreignKeyName="categories_user_id_fk"/>
+            </column>
         </createTable>
         <addUniqueConstraint
                 tableName="categories"
                 columnNames="parent_id, name"
                 constraintName="uk_categories_parent_name"/>
 
-<!--        todo sprawdzić czy to jest potrzebne, constraint powyżej powinien wystarczyć do parent_id = null-->
-<!--        <sql dbms="postgresql">-->
-<!--            CREATE UNIQUE INDEX ux_categories_root_name-->
-<!--                ON categories (name)-->
-<!--                WHERE parent_id IS NULL;-->
-<!--        </sql>-->
+<!--        na nazwa kategorii i null parentId nie działa constraint wyżej, więc zostawiam-->
+        <sql dbms="postgresql">
+            CREATE UNIQUE INDEX ux_categories_root_name
+                ON categories (name)
+                WHERE parent_id IS NULL;
+        </sql>
+    </changeSet>
+    <changeSet id="3" author="PD">
+        <createTable tableName="threads">
+            <column name="thread_id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" unique="true"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="clob">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" references="users(user_id)" foreignKeyName="threads_user_id_fk"/>
+            </column>
+            <column name="category_id" type="uuid">
+                <constraints nullable="false" references="categories(category_id)" foreignKeyName="threads_category_id_fk"/>
+            </column>
+        </createTable>
     </changeSet>
 </databaseChangeLog>

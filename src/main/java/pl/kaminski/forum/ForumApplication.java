@@ -6,10 +6,11 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 import org.springframework.context.annotation.Import;
 import pl.kaminski.forum.category.infrastructure.CategoryConfiguration;
 import pl.kaminski.forum.commons.CommonsConfiguration;
+import pl.kaminski.forum.thread.infrastructure.ThreadConfiguration;
 import pl.kaminski.forum.users.infrastructure.UserConfiguration;
 
 @SpringBootApplication(exclude = { UserDetailsServiceAutoConfiguration.class })
-@Import({UserConfiguration.class, CommonsConfiguration.class, CategoryConfiguration.class})
+@Import({UserConfiguration.class, CommonsConfiguration.class, CategoryConfiguration.class, ThreadConfiguration.class})
 public class ForumApplication {
 
     public static void main(String[] args) {

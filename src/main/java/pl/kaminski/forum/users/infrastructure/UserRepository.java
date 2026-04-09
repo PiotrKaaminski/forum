@@ -2,6 +2,7 @@ package pl.kaminski.forum.users.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.users.domain.IUserRepository;
+import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.users.domain.User;
 import pl.kaminski.forum.users.domain.UsernameVO;
 
@@ -16,6 +17,12 @@ public class UserRepository implements IUserRepository {
     public boolean existsByUsername(UsernameVO usernameVo) {
         return userJpaRepository.existsByUsername(usernameVo);
     }
+
+    @Override
+    public Optional<EntityId> findIdByUsername(String username) {
+        return userJpaRepository.findIdByUsername(username);
+    }
+
 
     @Override
     public Optional<User> findByUsername(String username) {
