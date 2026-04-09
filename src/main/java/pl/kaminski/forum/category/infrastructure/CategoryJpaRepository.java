@@ -10,7 +10,7 @@ import pl.kaminski.forum.commons.EntityId;
 import java.util.Optional;
 
 @Repository
-public interface CategoryJpaRepository extends JpaRepository<Category, EntityId> {
+interface CategoryJpaRepository extends JpaRepository<Category, EntityId> {
 
     @Query("SELECT c.id FROM Category c WHERE c.name = :categoryNameVO AND c.parentId = :parentId")
     Optional<EntityId> findIdByNameAndParentId(CategoryNameVO categoryNameVO, EntityId parentId);

@@ -13,10 +13,10 @@ public class UserQueryFacade implements IUserQueryFacade {
     public UserInfo getMe(String username) {
         return userQueryRepository.findByUsername(username)
                 .map(u -> new UserInfo(
-                        u.getId().value(),
-                        u.getUsername().getUsername(),
-                        u.getFirstName().getFirstName(),
-                        u.getLastName().getLastName(),
+                        u.getId(),
+                        u.getUsername(),
+                        u.getFirstName(),
+                        u.getLastName(),
                         u.getRole()
                 ))
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));

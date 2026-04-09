@@ -26,7 +26,7 @@ public class CategoryService implements ICategoryService {
                 return CreateCategoryResult.parentCategoryNotExists(EntityId.from(request.parentId()));
             }
         }
-        var createdBy = userService.getByUsername(username).orElseThrow(() -> new RuntimeException("User with username " + username + " not found"));
+        var createdBy = userService.getIdByUsername(username).orElseThrow(() -> new RuntimeException("User with username " + username + " not found"));
         var createCategoryResult = Category.createFromRequest(request, parentId, createdBy, dateTimeProvider);
         if (createCategoryResult.isError()) {
             return CreateCategoryResult.fromValidationError(createCategoryResult.getError());

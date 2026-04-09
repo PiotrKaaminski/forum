@@ -5,12 +5,11 @@ import pl.kaminski.forum.users.domain.IUserRepository;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.users.domain.User;
 import pl.kaminski.forum.users.domain.UsernameVO;
-import pl.kaminski.forum.users.query.IUserQueryRepository;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class UserRepository implements IUserRepository, IUserQueryRepository {
+class UserRepository implements IUserRepository{
 
     private final UserJpaRepository userJpaRepository;
 

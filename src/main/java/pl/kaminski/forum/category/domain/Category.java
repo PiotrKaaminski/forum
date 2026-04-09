@@ -9,7 +9,6 @@ import pl.kaminski.forum.category.application.contract.ModifyCategoryResult;
 import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.Result;
-import pl.kaminski.forum.users.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -28,11 +27,10 @@ public class Category {
     @AttributeOverride(name = "value", column = @Column(name = "parent_id"))
     private EntityId parentId;
     private LocalDateTime createdAt;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by")
-    private User createdBy;
+    @AttributeOverride(name = "value", column = @Column(name = "created_by"))
+    private EntityId createdBy;
 
-    public static Result<Category, CreateCategoryResult.ValidationError> createFromRequest(CreateCategoryRequest request, EntityId parentId, User creator, DateTimeProvider dateTimeProvider) {
+    public static Result<Category, CreateCategoryResult.ValidationError> createFromRequest(CreateCategoryRequest request, EntityId parentId, EntityId creatorId, DateTimeProvider dateTimeProvider) {
         var validationErrorBuilder = CreateCategoryResult.errorBuilder();
         var categoryBuilder = Category.builder();
 
@@ -45,7 +43,7 @@ public class Category {
         var category = categoryBuilder.parentId(parentId)
                 .id(EntityId.newId())
                 .createdAt(dateTimeProvider.currentDateTime())
-                .createdBy(creator)
+                .createdBy(creatorId)
                 .build();
 
         return Result.success(category);

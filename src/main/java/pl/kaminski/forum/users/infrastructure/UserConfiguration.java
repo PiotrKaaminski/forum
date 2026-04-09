@@ -10,18 +10,22 @@ import pl.kaminski.forum.users.application.UserService;
 import pl.kaminski.forum.users.application.contract.authentication.IAuthenticationService;
 import pl.kaminski.forum.users.application.contract.IUserService;
 import pl.kaminski.forum.users.application.JwtUtils;
+import pl.kaminski.forum.users.domain.IUserRepository;
 import pl.kaminski.forum.users.domain.UserFactory;
+import pl.kaminski.forum.users.query.IUserQueryRepository;
 import pl.kaminski.forum.users.query.UserQueryFacade;
 import pl.kaminski.forum.users.query.contract.IUserQueryFacade;
 
 public class UserConfiguration {
 
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
+    private final IUserQueryRepository userQueryRepository;
     private final UserFactory userFactory;
     private final PasswordEncoder passwordEncoder;
 
-    UserConfiguration(UserJpaRepository userJpaRepository, DateTimeProvider dateTimeProvider) {
+    UserConfiguration(UserJpaRepository userJpaRepository, UserQueryJpaRepository userQueryJpaRepository, DateTimeProvider dateTimeProvider) {
         this.userRepository = new UserRepository(userJpaRepository);
+        this.userQueryRepository = new UserQueryRepository(userQueryJpaRepository);
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.userFactory = new UserFactory(userRepository, dateTimeProvider, passwordEncoder);
 
@@ -39,7 +43,7 @@ public class UserConfiguration {
 
     @Bean
     IUserQueryFacade userQueryFacade() {
-        return new UserQueryFacade(userRepository);
+        return new UserQueryFacade(userQueryRepository);
     }
 
     @Bean
