@@ -27,8 +27,8 @@ public class UserConfiguration {
     }
 
     @Bean
-    IUserService userService(DateTimeProvider dateTimeProvider) {
-        return new UserService(userRepository, dateTimeProvider, userFactory);
+    IUserService userService() {
+        return new UserService(userRepository, userFactory);
     }
 
     @Bean

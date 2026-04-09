@@ -2,7 +2,6 @@ package pl.kaminski.forum.users.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.Assert;
-import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.IUserService;
@@ -10,13 +9,10 @@ import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 import pl.kaminski.forum.users.domain.IUserRepository;
 import pl.kaminski.forum.users.domain.UserFactory;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 public class UserService implements IUserService {
 
     private final IUserRepository userRepository;
-    private final DateTimeProvider dateTimeProvider;
     private final UserFactory userFactory;
 
     @Override
