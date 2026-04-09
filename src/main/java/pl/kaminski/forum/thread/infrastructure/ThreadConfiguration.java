@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import pl.kaminski.forum.category.application.contract.ICategoryService;
 import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.thread.application.ThreadService;
-import pl.kaminski.forum.thread.application.contract.IThreadRepository;
+import pl.kaminski.forum.thread.domain.IThreadRepository;
 import pl.kaminski.forum.thread.application.contract.IThreadService;
 import pl.kaminski.forum.users.application.contract.IUserService;
 

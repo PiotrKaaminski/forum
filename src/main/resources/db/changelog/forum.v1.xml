@@ -57,7 +57,6 @@
                 columnNames="parent_id, name"
                 constraintName="uk_categories_parent_name"/>
 
-<!--        na nazwa kategorii i null parentId nie działa constraint wyżej, więc zostawiam-->
         <sql dbms="postgresql">
             CREATE UNIQUE INDEX ux_categories_root_name
                 ON categories (name)

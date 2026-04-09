@@ -1,7 +1,5 @@
-package pl.kaminski.forum.category.application.contract;
+package pl.kaminski.forum.category.domain;
 
-import pl.kaminski.forum.category.domain.Category;
-import pl.kaminski.forum.category.domain.CategoryNameVO;
 import pl.kaminski.forum.commons.EntityId;
 
 import java.util.Optional;
