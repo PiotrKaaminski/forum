@@ -32,8 +32,4 @@ public class UserService implements IUserService {
         return RegisterUserResult.success(user.getId().value());
     }
 
-    public void test() {
-        // create user
-        // save
-    }
 }
