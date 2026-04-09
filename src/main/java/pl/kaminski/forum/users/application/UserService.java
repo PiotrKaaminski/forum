@@ -2,12 +2,14 @@ package pl.kaminski.forum.users.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.Assert;
-import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.IUserService;
 import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 import pl.kaminski.forum.users.domain.IUserRepository;
+import pl.kaminski.forum.users.domain.User;
 import pl.kaminski.forum.users.domain.UserFactory;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class UserService implements IUserService {
@@ -16,9 +18,8 @@ public class UserService implements IUserService {
     private final UserFactory userFactory;
 
     @Override
-    public EntityId getIdByUsername(String username) {
-        return userRepository.findIdByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User with username " + username + " not found"));
+    public Optional<User> getByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     public RegisterUserResult registerNewUser(RegisterUserRequest request) {
