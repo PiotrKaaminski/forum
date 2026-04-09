@@ -2,14 +2,14 @@ package pl.kaminski.forum.users.infrastructure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import pl.kaminski.forum.users.query.UserQuery;
+import pl.kaminski.forum.users.query.User;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-interface UserQueryJpaRepository extends JpaRepository<UserQuery, UUID> {
+interface UserQueryJpaRepository extends JpaRepository<User, UUID> {
 
-    Optional<UserQuery> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
 }

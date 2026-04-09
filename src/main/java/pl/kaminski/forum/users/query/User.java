@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "UserQuery")
 @Table(name = "users")
 @Data
-public class UserQuery {
+public class User {
     @Id
     @Column(name = "user_id")
     private UUID id;
