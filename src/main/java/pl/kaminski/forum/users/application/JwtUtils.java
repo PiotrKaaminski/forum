@@ -12,13 +12,15 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtUtils {
 
+    private static final Long TOKEN_VALIDITY = 7200000L;
+
     private final String secretKey;
 
     public String generateToken(UsernameVO usernameVO) {
         return JWT.create()
                 .withSubject(usernameVO.getUsername())
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 7200000L))
+                .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_VALIDITY))
                 .sign(Algorithm.HMAC256(secretKey));
     }
 
