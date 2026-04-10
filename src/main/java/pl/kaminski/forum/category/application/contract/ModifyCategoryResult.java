@@ -17,25 +17,15 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
     public static ModifyCategoryResult success(String name) {return new ModifyCategoryResult(new Success(name));}
     public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
     public static ModifyCategoryResult fromValidationError(ValidationError error) {return new ModifyCategoryResult(error);}
-    public static ModifyCategoryResult categoryNameNotUnique(EntityId id) {return new ModifyCategoryResult(new CategoryNameNotUnique(id.value()));}
+    public static ModifyCategoryResult categoryNameNotUnique() {
+        var error = errorBuilder().withCategoryNameNotUnique().build();
+        return new ModifyCategoryResult(error);
+    }
     public static ModifyCategoryResult categoryNotFound(EntityId id) {return new ModifyCategoryResult(new CategoryNotFound(id.value()));}
 
     public record Success(String name) { }
 
     public sealed interface Error extends ResultError { }
-
-    public record CategoryNameNotUnique(UUID id) implements Error {
-        @Override
-        public String getMessage() {
-            return "category name is not unique";
-        }
-    }
-    public record ParentCategoryNotExists(UUID id) implements Error {
-        @Override
-        public String getMessage() {
-            return "parent category with given id does not exist";
-        }
-    }
 
     public record CategoryNotFound(UUID id) implements Error {
         @Override
@@ -60,6 +50,11 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
                 withViolation(violation);
             }
 
+            private Builder withCategoryNameNotUnique() {
+                withViolation(ViolationError.NAME_NOT_UNIQUE);
+                return this;
+            }
+
             private void withViolation(ViolationError error) {
                 super.withViolation(error, new ViolationDetails(error.field, error.reason));
             }
@@ -74,7 +69,8 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
         public enum ViolationError {
             NAME_EMPTY(InvalidField.NAME, InvalidReason.EMPTY),
             NAME_TOO_LONG(InvalidField.NAME, InvalidReason.TOO_LONG),
-            NAME_TOO_SHORT(InvalidField.NAME, InvalidReason.TOO_SHORT);
+            NAME_TOO_SHORT(InvalidField.NAME, InvalidReason.TOO_SHORT),
+            NAME_NOT_UNIQUE(InvalidField.NAME, InvalidReason.NOT_UNIQUE);
 
             private final InvalidField field;
             private final InvalidReason reason;
@@ -86,7 +82,8 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
         public enum InvalidReason {
             EMPTY,
             TOO_LONG,
-            TOO_SHORT
+            TOO_SHORT,
+            NOT_UNIQUE
         }
 
         public record ViolationDetails(InvalidField field, InvalidReason reason) { }

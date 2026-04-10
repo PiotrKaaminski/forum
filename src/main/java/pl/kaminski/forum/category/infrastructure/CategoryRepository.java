@@ -14,6 +14,11 @@ public class CategoryRepository implements ICategoryRepository {
     private final CategoryJpaRepository categoryJpaRepository;
 
     @Override
+    public boolean existsById(EntityId categoryId) {
+        return categoryJpaRepository.existsById(categoryId);
+    }
+
+    @Override
     public Optional<Category> findById(EntityId parentId) {
         return categoryJpaRepository.findById(parentId);
     }

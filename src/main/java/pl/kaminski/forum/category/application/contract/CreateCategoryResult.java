@@ -14,25 +14,19 @@ public class CreateCategoryResult extends Result<CreateCategoryResult.Success, C
 
     private CreateCategoryResult(Success success) {super(success);}
     private CreateCategoryResult(Error error) {super(error);}
-    public static CreateCategoryResult success(UUID id) {return new CreateCategoryResult(new Success(id));}
+    public static CreateCategoryResult success(EntityId id) {return new CreateCategoryResult(new Success(id.value()));}
     public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
-    public static CreateCategoryResult fromValidationError(ValidationError error) {return new CreateCategoryResult(error);}
-    public static CreateCategoryResult parentCategoryNotExists(EntityId id) {return new CreateCategoryResult(new ParentCategoryNotExists(id.value()));}
-    public static CreateCategoryResult categoryNameNotUnique(EntityId id) {return new CreateCategoryResult(new CategoryNameNotUnique(id.value()));}
+    public static CreateCategoryResult fromError(Error error) {return new CreateCategoryResult(error);}
+    public static Error parentCategoryNotExists(UUID parentId) {return new ParentCategoryNotExists(parentId);}
 
     public record Success(UUID id) { }
 
     public sealed interface Error extends ResultError { }
-    public record CategoryNameNotUnique(UUID id) implements Error {
+
+    public record ParentCategoryNotExists(UUID parentId) implements Error {
         @Override
         public String getMessage() {
-            return "category name is not unique";
-        }
-    }
-    public record ParentCategoryNotExists(UUID id) implements Error {
-        @Override
-        public String getMessage() {
-            return "parent category with given id does not exist";
+            return String.format("parent category with id %s does not exist", parentId);
         }
     }
 
@@ -52,6 +46,10 @@ public class CreateCategoryResult extends Result<CreateCategoryResult.Success, C
                 withViolation(violation);
             }
 
+            public void withNameNotUnique() {
+                withViolation(ViolationError.NAME_NOT_UNIQUE);
+            }
+
             private void withViolation(ViolationError error) {
                 super.withViolation(error, new ViolationDetails(error.field, error.reason));
             }
@@ -66,7 +64,7 @@ public class CreateCategoryResult extends Result<CreateCategoryResult.Success, C
         public enum ViolationError {
             NAME_EMPTY(InvalidField.NAME, InvalidReason.EMPTY),
             NAME_TOO_LONG(InvalidField.NAME, InvalidReason.TOO_LONG),
-            NAME_TOO_SHORT(InvalidField.NAME, InvalidReason.TOO_SHORT);
+            NAME_TOO_SHORT(InvalidField.NAME, InvalidReason.TOO_SHORT), NAME_NOT_UNIQUE(InvalidField.NAME, InvalidReason.NOT_UNIQUE);
 
             private final InvalidField field;
             private final InvalidReason reason;
@@ -78,7 +76,8 @@ public class CreateCategoryResult extends Result<CreateCategoryResult.Success, C
         public enum InvalidReason {
             EMPTY,
             TOO_LONG,
-            TOO_SHORT
+            TOO_SHORT,
+            NOT_UNIQUE
         }
 
         public record ViolationDetails(InvalidField field, InvalidReason reason) { }
