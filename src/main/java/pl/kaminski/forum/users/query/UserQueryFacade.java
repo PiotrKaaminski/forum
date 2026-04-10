@@ -14,13 +14,7 @@ public class UserQueryFacade implements IUserQueryFacade {
     @Transactional(readOnly = true)
     public UserInfo getMe(String username) {
         return userQueryRepository.findByUsername(username)
-                .map(u -> new UserInfo(
-                        u.getId(),
-                        u.getUsername(),
-                        u.getFirstName(),
-                        u.getLastName(),
-                        u.getRole()
-                ))
+                .map(QUser::toUserInfo)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }

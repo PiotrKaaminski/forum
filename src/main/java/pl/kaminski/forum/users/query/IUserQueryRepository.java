@@ -4,6 +4,6 @@ import java.util.Optional;
 
 public interface IUserQueryRepository {
 
-    Optional<User> findByUsername(String username);
+    Optional<QUser> findByUsername(String username);
 
 }

@@ -2,15 +2,15 @@ package pl.kaminski.forum.category.query;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import pl.kaminski.forum.users.query.User;
+import pl.kaminski.forum.users.query.QUser;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity(name = "CategoryQuery")
+@Entity
 @Data
 @Table(name = "categories")
-public class Category {
+public class QCategory {
 
     @Id
     @Column(name = "category_id")
@@ -18,9 +18,9 @@ public class Category {
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Category parent;
+    private QCategory parent;
     private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
-    private User createdBy;
+    private QUser createdBy;
 }

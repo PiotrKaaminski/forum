@@ -2,7 +2,7 @@ package pl.kaminski.forum.users.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.users.query.IUserQueryRepository;
-import pl.kaminski.forum.users.query.User;
+import pl.kaminski.forum.users.query.QUser;
 
 import java.util.Optional;
 
@@ -12,7 +12,7 @@ class UserQueryRepository implements IUserQueryRepository {
     private final UserQueryJpaRepository userQueryJpaRepository;
 
     @Override
-    public Optional<User> findByUsername(String username) {
+    public Optional<QUser> findByUsername(String username) {
         return userQueryJpaRepository.findByUsername(username);
     }
 }
