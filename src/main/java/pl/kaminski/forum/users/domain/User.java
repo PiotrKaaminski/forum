@@ -3,6 +3,7 @@ package pl.kaminski.forum.users.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.commons.EntityId;
 
 import java.time.LocalDateTime;
@@ -13,12 +14,12 @@ import java.time.LocalDateTime;
 @Builder(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@EntityListeners(UserFactory.UserInjector.class)
 public class User {
 
     @Id
     @AttributeOverride(name = "value", column = @Column(name = "user_id"))
-    @Builder.Default
-    private EntityId id = EntityId.newId();
+    private EntityId id;
     private UsernameVO username;
     private PasswordVO password;
     private FirstNameVO firstName;
@@ -27,6 +28,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private LocalDateTime creationDate;
+
+    @Transient
+    @Setter(AccessLevel.PACKAGE)
+    private DateTimeProvider dateTimeProvider;
+    @Transient
+    @Setter(AccessLevel.PACKAGE)
+    private IPasswordHistory passwordHistory;
 
     public boolean passwordDoesNotMatch(String password, PasswordEncoder passwordEncoder) {
         return !passwordEncoder.matches(password, this.password.getPassword());
