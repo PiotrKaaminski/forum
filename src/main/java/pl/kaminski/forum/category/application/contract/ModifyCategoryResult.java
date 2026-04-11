@@ -4,26 +4,21 @@ import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.category.domain.CategoryNameVO;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.AbstractInputValidationError;
-import pl.kaminski.forum.commons.result.Result;
+import pl.kaminski.forum.commons.result.EmptyResult;
 import pl.kaminski.forum.commons.result.ResultError;
 
 import java.util.Map;
 import java.util.UUID;
 
-public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, ModifyCategoryResult.Error> {
+public class ModifyCategoryResult extends EmptyResult<ModifyCategoryResult.Error> {
 
-    private ModifyCategoryResult(Success success) {super(success);}
+    private ModifyCategoryResult() {super();}
     private ModifyCategoryResult(Error error) {super(error);}
-    public static ModifyCategoryResult success(String name) {return new ModifyCategoryResult(new Success(name));}
-    public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
-    public static ModifyCategoryResult fromValidationError(ValidationError error) {return new ModifyCategoryResult(error);}
-    public static ModifyCategoryResult categoryNameNotUnique() {
-        var error = errorBuilder().withCategoryNameNotUnique().build();
-        return new ModifyCategoryResult(error);
-    }
-    public static ModifyCategoryResult categoryNotFound(EntityId id) {return new ModifyCategoryResult(new CategoryNotFound(id.value()));}
 
-    public record Success(String name) { }
+    public static ModifyCategoryResult success() {return new ModifyCategoryResult();}
+
+    public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
+    public static ModifyCategoryResult categoryNotFound(EntityId id) {return new ModifyCategoryResult(new CategoryNotFound(id.value()));}
 
     public sealed interface Error extends ResultError { }
 
@@ -50,18 +45,18 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
                 withViolation(violation);
             }
 
-            private Builder withCategoryNameNotUnique() {
+            public void withNameNotUnique() {
                 withViolation(ViolationError.NAME_NOT_UNIQUE);
-                return this;
             }
 
             private void withViolation(ViolationError error) {
                 super.withViolation(error, new ViolationDetails(error.field, error.reason));
             }
 
-            public ValidationError build() {
+            public ModifyCategoryResult build() {
                 assert hasViolations() : "cannot build error with no violations";
-                return new ValidationError(super.violations);
+                var validationError = new ValidationError(super.violations);
+                return new ModifyCategoryResult(validationError);
             }
         }
 

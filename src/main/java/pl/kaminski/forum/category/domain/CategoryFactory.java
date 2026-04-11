@@ -32,9 +32,13 @@ public class CategoryFactory {
         var validationErrorBuilder = CreateCategoryResult.errorBuilder();
 
         CategoryNameVO.create(request.name()).handle(
-                name -> categoryNameNotUnique(parentCategory).isSatisfiedBy(name, validationErrorBuilder::withNameNotUnique, categoryBuilder::name),
+                name -> parentCategory.subcategoryWithNameExists().isSatisfiedBy(name, validationErrorBuilder::withNameNotUnique, categoryBuilder::name),
                 validationErrorBuilder::withCategoryNameVoError
         );
+
+        if (validationErrorBuilder.hasViolations()) {
+            return Result.error(validationErrorBuilder.build());
+        }
 
         var category = categoryBuilder.id(EntityId.newId())
                 .parentCategory(parentCategory)
@@ -51,7 +55,4 @@ public class CategoryFactory {
         };
     }
 
-    private Specification<CategoryNameVO> categoryNameNotUnique(IParentCategory parentCategory) {
-        return parentCategory::subcategoryWithNameExists;
-    }
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.users.domain.UsernameVO;
 
 import java.util.Date;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtUtils {
@@ -25,7 +26,7 @@ public class JwtUtils {
     }
 
     public String extractUsername(String token) {
-        return getDecodedJWT(token).getSubject();
+        return getDecodedJWT(token).map(DecodedJWT::getSubject).orElse(null);
     }
 
     public boolean isTokenValid(String token) {
@@ -40,11 +41,12 @@ public class JwtUtils {
         }
     }
 
-    private DecodedJWT getDecodedJWT(String token) {
+    private Optional<DecodedJWT> getDecodedJWT(String token) {
         try {
-            return JWT.require(Algorithm.HMAC256(secretKey)).build().verify(token);
+            var decodedJwt = JWT.require(Algorithm.HMAC256(secretKey)).build().verify(token);
+            return Optional.of(decodedJwt);
         } catch (JWTVerificationException e) {
-            throw new RuntimeException("invalid JWT token", e);
+            return Optional.empty();
         }
     }
 }

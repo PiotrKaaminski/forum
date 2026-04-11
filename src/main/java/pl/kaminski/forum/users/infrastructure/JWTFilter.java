@@ -36,8 +36,11 @@ public class JWTFilter extends OncePerRequestFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        if (!jwtUtils.isTokenValid(token)) {
+            return null;
+        }
         var username = jwtUtils.extractUsername(token);
-        if (username == null || !jwtUtils.isTokenValid(token)) {
+        if (username == null) {
             return null;
         }
         var userOptional = userRepository.findByUsername(username);

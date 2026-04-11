@@ -5,7 +5,6 @@ import lombok.*;
 import pl.kaminski.forum.category.application.contract.ModifyCategoryRequest;
 import pl.kaminski.forum.category.application.contract.ModifyCategoryResult;
 import pl.kaminski.forum.commons.EntityId;
-import pl.kaminski.forum.commons.result.Result;
 
 import java.time.LocalDateTime;
 
@@ -21,20 +20,24 @@ public class Category {
     @AttributeOverride(name = "value", column = @Column(name = "category_id"))
     private EntityId id;
     private CategoryNameVO name;
+    @Column(name = "parent_id")
     private IParentCategory parentCategory;
     private LocalDateTime createdAt;
     @AttributeOverride(name = "value", column = @Column(name = "created_by"))
     private EntityId createdBy;
 
-    public Result<Category, ModifyCategoryResult.ValidationError> modifyCategory(ModifyCategoryRequest request) {
+    public ModifyCategoryResult modifyCategory(ModifyCategoryRequest request) {
         var validationErrorBuilder = ModifyCategoryResult.errorBuilder();
 
-        CategoryNameVO.create(request.name()).handle(this::setName, validationErrorBuilder::withCategoryNameVoError);
+        CategoryNameVO.create(request.name()).handle(
+                name -> parentCategory.subcategoryWithNameExists().isSatisfiedBy(name, validationErrorBuilder::withNameNotUnique, this::setName),
+                validationErrorBuilder::withCategoryNameVoError
+        );
 
         if (validationErrorBuilder.hasViolations()) {
-            return Result.error(validationErrorBuilder.build());
+            return validationErrorBuilder.build();
         }
 
-        return Result.success(this);
+        return ModifyCategoryResult.success();
     }
 }

@@ -1,5 +1,6 @@
 package pl.kaminski.forum.category.application;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.category.application.contract.*;
 import pl.kaminski.forum.category.domain.CategoryFactory;
@@ -24,6 +25,7 @@ public class CategoryService implements ICategoryService {
         return CreateCategoryResult.success(category.getId());
     }
 
+    @Transactional
     public ModifyCategoryResult modifyCategory(EntityId id, ModifyCategoryRequest request) {
         // zabezpieczenie przed nie adminami?
         assert id != null : "Id cannot be null";
@@ -34,16 +36,6 @@ public class CategoryService implements ICategoryService {
             return ModifyCategoryResult.categoryNotFound(id);
         }
         var category = categoryOptional.get();
-        var modifyCategoryResult = category.modifyCategory(request);
-        if (modifyCategoryResult.isError()) {
-            return ModifyCategoryResult.fromValidationError(modifyCategoryResult.getError());
-        }
-        var modifiedCategory = modifyCategoryResult.getSuccess();
-        var existingCategoryOptional = categoryRepository.findIdByNameAndParentId(category.getName(), category.getParentId());
-        if (existingCategoryOptional.isPresent()) {
-            return ModifyCategoryResult.categoryNameNotUnique();
-        }
-        categoryRepository.save(modifiedCategory);
-        return ModifyCategoryResult.success(modifiedCategory.getName().getName());
+        return category.modifyCategory(request);
     }
 }
