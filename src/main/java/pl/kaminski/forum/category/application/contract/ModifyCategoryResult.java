@@ -4,38 +4,23 @@ import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.category.domain.CategoryNameVO;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.AbstractInputValidationError;
-import pl.kaminski.forum.commons.result.Result;
+import pl.kaminski.forum.commons.result.EmptyResult;
 import pl.kaminski.forum.commons.result.ResultError;
 
 import java.util.Map;
 import java.util.UUID;
 
-public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, ModifyCategoryResult.Error> {
+public class ModifyCategoryResult extends EmptyResult<ModifyCategoryResult.Error> {
 
-    private ModifyCategoryResult(Success success) {super(success);}
+    private ModifyCategoryResult() {super();}
     private ModifyCategoryResult(Error error) {super(error);}
-    public static ModifyCategoryResult success(String name) {return new ModifyCategoryResult(new Success(name));}
+
+    public static ModifyCategoryResult success() {return new ModifyCategoryResult();}
+
     public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
-    public static ModifyCategoryResult fromValidationError(ValidationError error) {return new ModifyCategoryResult(error);}
-    public static ModifyCategoryResult categoryNameNotUnique(EntityId id) {return new ModifyCategoryResult(new CategoryNameNotUnique(id.value()));}
     public static ModifyCategoryResult categoryNotFound(EntityId id) {return new ModifyCategoryResult(new CategoryNotFound(id.value()));}
 
-    public record Success(String name) { }
-
     public sealed interface Error extends ResultError { }
-
-    public record CategoryNameNotUnique(UUID id) implements Error {
-        @Override
-        public String getMessage() {
-            return "category name is not unique";
-        }
-    }
-    public record ParentCategoryNotExists(UUID id) implements Error {
-        @Override
-        public String getMessage() {
-            return "parent category with given id does not exist";
-        }
-    }
 
     public record CategoryNotFound(UUID id) implements Error {
         @Override
@@ -60,13 +45,18 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
                 withViolation(violation);
             }
 
+            public void withNameNotUnique() {
+                withViolation(ViolationError.NAME_NOT_UNIQUE);
+            }
+
             private void withViolation(ViolationError error) {
                 super.withViolation(error, new ViolationDetails(error.field, error.reason));
             }
 
-            public ValidationError build() {
+            public ModifyCategoryResult build() {
                 assert hasViolations() : "cannot build error with no violations";
-                return new ValidationError(super.violations);
+                var validationError = new ValidationError(super.violations);
+                return new ModifyCategoryResult(validationError);
             }
         }
 
@@ -74,7 +64,8 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
         public enum ViolationError {
             NAME_EMPTY(InvalidField.NAME, InvalidReason.EMPTY),
             NAME_TOO_LONG(InvalidField.NAME, InvalidReason.TOO_LONG),
-            NAME_TOO_SHORT(InvalidField.NAME, InvalidReason.TOO_SHORT);
+            NAME_TOO_SHORT(InvalidField.NAME, InvalidReason.TOO_SHORT),
+            NAME_NOT_UNIQUE(InvalidField.NAME, InvalidReason.NOT_UNIQUE);
 
             private final InvalidField field;
             private final InvalidReason reason;
@@ -86,7 +77,8 @@ public class ModifyCategoryResult extends Result<ModifyCategoryResult.Success, M
         public enum InvalidReason {
             EMPTY,
             TOO_LONG,
-            TOO_SHORT
+            TOO_SHORT,
+            NOT_UNIQUE
         }
 
         public record ViolationDetails(InvalidField field, InvalidReason reason) { }

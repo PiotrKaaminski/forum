@@ -1,21 +1,30 @@
 package pl.kaminski.forum.users.domain;
 
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.PostLoad;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.kaminski.forum.commons.DateTimeProvider;
+import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.Specification;
 import pl.kaminski.forum.commons.result.Result;
 import pl.kaminski.forum.users.application.contract.RegisterUserRequest;
 import pl.kaminski.forum.users.application.contract.RegisterUserResult;
 
 import java.util.Optional;
+import java.util.function.Function;
 
-@RequiredArgsConstructor
 public class UserFactory {
 
     private final IUserRepository userRepository;
-    private final DateTimeProvider dateTimeProvider;
+    private static DateTimeProvider dateTimeProvider;
     private final PasswordEncoder passwordEncoder;
+    private static Function<EntityId, IPasswordHistory> passwordHistoryProvider;
+
+    public UserFactory(IUserRepository userRepository, DateTimeProvider dateTimeProvider, PasswordEncoder passwordEncoder, Function<EntityId, IPasswordHistory> passwordHistoryProvider) {
+        this.userRepository = userRepository;
+        UserFactory.dateTimeProvider = dateTimeProvider;
+        this.passwordEncoder = passwordEncoder;
+        UserFactory.passwordHistoryProvider = passwordHistoryProvider;
+    }
 
     public Result<User, RegisterUserResult.ValidationError> createNewUser(RegisterUserRequest request) {
         var validationErrorBuilder = RegisterUserResult.errorBuilder();
@@ -35,12 +44,29 @@ public class UserFactory {
             return Result.error(validationErrorBuilder.build());
         }
 
-        var user = userBuilder.creationDate(dateTimeProvider.currentDateTime()).build();
+        var userId = EntityId.newId();
+        var user = userBuilder
+                .id(userId)
+                .creationDate(dateTimeProvider.currentDateTime())
+                .build();
+        injectUserDependencies(user);
         return Result.success(user);
+    }
+
+    private static void injectUserDependencies(User user) {
+        user.setPasswordHistory(passwordHistoryProvider.apply(user.getId()));
+        user.setDateTimeProvider(dateTimeProvider);
     }
 
     private Specification<UsernameVO> isUsernameNotUnique() {
         return userRepository::existsByUsername;
+    }
+
+    static class UserInjector {
+        @PostLoad
+        void postLoad(User user) {
+            injectUserDependencies(user);
+        }
     }
 
 }
