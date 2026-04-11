@@ -20,6 +20,7 @@ public class Category {
     @AttributeOverride(name = "value", column = @Column(name = "category_id"))
     private EntityId id;
     private CategoryNameVO name;
+    @SuppressWarnings("JpaAttributeTypeInspection")
     @Column(name = "parent_id")
     private IParentCategory parentCategory;
     private LocalDateTime createdAt;
