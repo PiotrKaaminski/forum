@@ -1,11 +1,15 @@
 package pl.kaminski.forum.thread.application;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.thread.domain.CategoryNotExistsSpecification;
 import pl.kaminski.forum.users.application.contract.authentication.AuthenticatedUser;
 import pl.kaminski.forum.thread.application.contract.*;
 import pl.kaminski.forum.thread.domain.IThreadRepository;
 import pl.kaminski.forum.thread.domain.ThreadFactory;
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class ThreadService implements IThreadService {
@@ -16,6 +20,7 @@ public class ThreadService implements IThreadService {
 
 
     @Override
+    @Transactional
     public CreateThreadResult createThread(CreateThreadRequest request, AuthenticatedUser requestor) {
         assert request != null && requestor != null : "Request and requestor cannot be null";
 
@@ -29,11 +34,21 @@ public class ThreadService implements IThreadService {
     }
 
     @Override
-    public ModifyThreadResult modifyThread(ModifyThreadRequest request) {
+    @Transactional
+    public ModifyThreadResult modifyThread(UUID id, ModifyThreadRequest request) {
         assert request != null : "Request cannot be null";
+        assert id != null : "Id cannot be null";
 
-//        categoryExistsSpecification.isSatisfiedBy(categoryId, threadBuilder::categoryId, validationErrorBuilder::withCategoryNotFound);
+        var threadOptional = threadRepository.findById(EntityId.from(id));
+        if (threadOptional.isEmpty()) {
+            return ModifyThreadResult.threadNotFound(id);
+        }
+        var thread = threadOptional.get();
 
-        return null;
+        if (categoryNotExistsSpecification.isSatisfiedBy(EntityId.from(request.categoryId()))) {
+            return ModifyThreadResult.categoryNotFound(request.categoryId());
+        }
+
+        return thread.modifyThread(request);
     }
 }

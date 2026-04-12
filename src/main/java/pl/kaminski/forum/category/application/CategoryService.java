@@ -15,6 +15,7 @@ public class CategoryService implements ICategoryService {
     private final CategoryFactory categoryFactory;
 
     @Override
+    @Transactional
     public CreateCategoryResult createCategory(CreateCategoryRequest request, AuthenticatedUser requestor) {
         assert request != null && requestor != null : "Request and requestor cannot be null";
 

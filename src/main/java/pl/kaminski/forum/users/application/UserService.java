@@ -1,5 +1,6 @@
 package pl.kaminski.forum.users.application;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.Assert;
 import pl.kaminski.forum.commons.EntityId;
@@ -22,6 +23,7 @@ public class UserService implements IUserService {
         return userRepository.findIdByUsername(username);
     }
 
+    @Transactional
     public RegisterUserResult registerNewUser(RegisterUserRequest request) {
         Assert.notNull(request, "Request cannot be null");
         var createUserResult = userFactory.createNewUser(request);

@@ -21,14 +21,28 @@ public class Thread {
     private ThreadTitleVO title;
     private ThreadContentVO content;
     @AttributeOverride(name = "value", column = @Column(name = "category_id"))
-    // todo tutaj na przykład klasa z categoryId i repo, żeby móc tam sprawdzić czy kategoria istnieje, zamiast robić to w serwisie?
     private EntityId categoryId;
     @AttributeOverride(name = "value", column = @Column(name = "created_by"))
     private EntityId createdBy;
     private LocalDateTime createdAt;
 
+    // todo do zmiany, żeby zmieniać stan dopiero po walidacji
     public ModifyThreadResult modifyThread(ModifyThreadRequest request) {
-        return null;
+        var validationErrorBuilder = ModifyThreadResult.errorBuilder();
+
+        ThreadTitleVO.create(request.title()).handle(this::setTitle, validationErrorBuilder::withTitleVoError);
+        ThreadContentVO.create(request.content()).handle(this::setContent, validationErrorBuilder::withContentVoError);
+
+        if (request.categoryId() == null) {
+            validationErrorBuilder.withCategoryEmpty();
+        }
+        this.categoryId = EntityId.from(request.categoryId());
+
+        if (validationErrorBuilder.hasViolations()) {
+            return validationErrorBuilder.build();
+        }
+
+        return ModifyThreadResult.success();
     }
 
 }
