@@ -5,13 +5,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pl.kaminski.forum.commons.AuthenticatedUser;
+import pl.kaminski.forum.commons.EntityId;
+import pl.kaminski.forum.users.application.contract.authentication.AuthenticatedUser;
 import pl.kaminski.forum.users.application.JwtUtils;
-import pl.kaminski.forum.users.domain.IUserRepository;
+import pl.kaminski.forum.users.query.IUserQueryRepository;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -20,10 +22,10 @@ import java.util.Collections;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
-    private final IUserRepository userRepository;
+    private final IUserQueryRepository userQueryRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         var token = request.getHeader("Authorization");
 
         if (token == null || !token.startsWith("Bearer ")) {
@@ -44,13 +46,13 @@ public class JWTFilter extends OncePerRequestFilter {
         if (username == null) {
             return null;
         }
-        var userOptional = userRepository.findByUsername(username);
+        var userOptional = userQueryRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
             return null;
         }
         var user = userOptional.get();
         var userRole = userOptional.get().getRole();
-        var authenticatedUser = new AuthenticatedUser(user.getId(), user.getUsername().getUsername(), userRole);
+        var authenticatedUser = new AuthenticatedUser(EntityId.from(user.getId()), user.getUsername(), userRole);
         return new UsernamePasswordAuthenticationToken(authenticatedUser, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole)));
     }
 }

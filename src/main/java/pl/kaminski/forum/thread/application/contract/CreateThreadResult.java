@@ -39,6 +39,10 @@ public class CreateThreadResult extends Result<CreateThreadResult.Success, Creat
         }
         public static class Builder extends AbstractInputValidationError.Builder<ViolationError, ViolationDetails> {
 
+            public void withCategoryEmpty() {
+                withViolation(ViolationError.CATEGORY_EMPTY);
+            }
+
             public void withTitleVoError(ThreadTitleVO.Error error) {
                 var violation = switch (error) {
                     case EMPTY -> ViolationError.TITLE_EMPTY;
@@ -68,6 +72,7 @@ public class CreateThreadResult extends Result<CreateThreadResult.Success, Creat
 
         @RequiredArgsConstructor
         public enum ViolationError {
+            CATEGORY_EMPTY(InvalidField.CATEGORY, InvalidReason.EMPTY),
             TITLE_EMPTY(InvalidField.TITLE, InvalidReason.EMPTY),
             TITLE_TOO_LONG(InvalidField.TITLE, InvalidReason.TOO_LONG),
             TITLE_TOO_SHORT(InvalidField.TITLE, InvalidReason.TOO_SHORT),
@@ -80,12 +85,13 @@ public class CreateThreadResult extends Result<CreateThreadResult.Success, Creat
 
         public enum InvalidField {
             TITLE,
-            CONTENT
+            CONTENT,
+            CATEGORY
         }
         public enum InvalidReason {
             EMPTY,
             TOO_LONG,
-            TOO_SHORT
+            TOO_SHORT,
         }
 
         public record ViolationDetails(InvalidField field, InvalidReason reason) { }

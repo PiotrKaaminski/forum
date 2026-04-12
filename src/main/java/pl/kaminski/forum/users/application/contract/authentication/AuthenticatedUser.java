@@ -1,7 +1,8 @@
-package pl.kaminski.forum.commons;
+package pl.kaminski.forum.users.application.contract.authentication;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.users.domain.Role;
 
 @RequiredArgsConstructor

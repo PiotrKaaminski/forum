@@ -11,6 +11,10 @@ public interface Specification<T> {
 
     boolean isSatisfiedBy(T t);
 
+    default boolean isNotSatisfiedBy(T t) {
+        return !isSatisfiedBy(t);
+    }
+
     default void isSatisfiedBy(T t, Runnable isSatisfied, Runnable isNotSatisfied) {
         if (isSatisfiedBy(t)) {
             isSatisfied.run();

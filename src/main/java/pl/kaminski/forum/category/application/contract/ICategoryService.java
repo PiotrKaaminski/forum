@@ -1,6 +1,6 @@
 package pl.kaminski.forum.category.application.contract;
 
-import pl.kaminski.forum.commons.AuthenticatedUser;
+import pl.kaminski.forum.users.application.contract.authentication.AuthenticatedUser;
 import pl.kaminski.forum.commons.EntityId;
 
 public interface ICategoryService {

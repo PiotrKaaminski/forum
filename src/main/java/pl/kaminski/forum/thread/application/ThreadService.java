@@ -1,8 +1,8 @@
 package pl.kaminski.forum.thread.application;
 
 import lombok.RequiredArgsConstructor;
-import pl.kaminski.forum.category.query.contract.ICategoryQueryFacade;
-import pl.kaminski.forum.commons.AuthenticatedUser;
+import pl.kaminski.forum.thread.domain.CategoryNotExistsSpecification;
+import pl.kaminski.forum.users.application.contract.authentication.AuthenticatedUser;
 import pl.kaminski.forum.thread.application.contract.*;
 import pl.kaminski.forum.thread.domain.IThreadRepository;
 import pl.kaminski.forum.thread.domain.ThreadFactory;
@@ -12,7 +12,7 @@ public class ThreadService implements IThreadService {
 
     private final IThreadRepository threadRepository;
     private final ThreadFactory threadFactory;
-    private final ICategoryQueryFacade categoryQueryFacade;
+    private final CategoryNotExistsSpecification categoryNotExistsSpecification;
 
 
     @Override
@@ -32,9 +32,7 @@ public class ThreadService implements IThreadService {
     public ModifyThreadResult modifyThread(ModifyThreadRequest request) {
         assert request != null : "Request cannot be null";
 
-        if (!categoryQueryFacade.categoryExists(request.categoryId())) {
-
-        }
+//        categoryExistsSpecification.isSatisfiedBy(categoryId, threadBuilder::categoryId, validationErrorBuilder::withCategoryNotFound);
 
         return null;
     }

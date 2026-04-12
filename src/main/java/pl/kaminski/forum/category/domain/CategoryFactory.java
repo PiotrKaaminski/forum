@@ -3,7 +3,7 @@ package pl.kaminski.forum.category.domain;
 import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.category.application.contract.CreateCategoryRequest;
 import pl.kaminski.forum.category.application.contract.CreateCategoryResult;
-import pl.kaminski.forum.commons.AuthenticatedUser;
+import pl.kaminski.forum.users.application.contract.authentication.AuthenticatedUser;
 import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.Specification;

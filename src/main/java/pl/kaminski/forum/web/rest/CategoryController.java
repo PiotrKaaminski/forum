@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.kaminski.forum.category.application.contract.*;
 import pl.kaminski.forum.commons.EntityId;
-import pl.kaminski.forum.commons.SecurityUtils;
+import pl.kaminski.forum.users.infrastructure.SecurityUtils;
 
 import java.util.UUID;
 

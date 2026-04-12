@@ -54,7 +54,7 @@ public class UserConfiguration {
 
     @Bean
     JWTFilter jwtFilter(JwtUtils jwtUtils) {
-        return new JWTFilter(jwtUtils, userRepository);
+        return new JWTFilter(jwtUtils, userQueryRepository);
     }
 
     @Bean
