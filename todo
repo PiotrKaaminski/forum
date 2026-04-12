@@ -41,7 +41,7 @@ unikalność na pełną ścieżkę (np. ABC/CAT i DEF/CAT mogą być)
 Wątki:
 wątki tworzy każdy użytkownik (admin i zwykły user)
 tytuł, opis, kategoria, różne dane pomocnicze (kto założył, kiedy założył itp)
-zarządzanie wątkiem (edycja tytułu, opisu, usunięcie, usuwanie komentarzy) dla adminów i użytkownika który założył
+zarządzanie wątkiem (edycja tytułu, opisu, kategorii, usunięcie, usuwanie komentarzy) dla adminów i użytkownika który założył
 
 
 Komentarze:

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.category.application.contract.*;
 import pl.kaminski.forum.category.domain.CategoryFactory;
 import pl.kaminski.forum.category.domain.ICategoryRepository;
+import pl.kaminski.forum.commons.AuthenticatedUser;
 import pl.kaminski.forum.commons.EntityId;
 
 @RequiredArgsConstructor
@@ -14,8 +15,9 @@ public class CategoryService implements ICategoryService {
     private final CategoryFactory categoryFactory;
 
     @Override
-    public CreateCategoryResult createCategory(CreateCategoryRequest request, String requestor) {
+    public CreateCategoryResult createCategory(CreateCategoryRequest request, AuthenticatedUser requestor) {
         assert request != null && requestor != null : "Request and requestor cannot be null";
+
         var createCategoryResult = categoryFactory.createNewCategory(request, requestor);
         if (createCategoryResult.isError()) {
             return CreateCategoryResult.fromError(createCategoryResult.getError());

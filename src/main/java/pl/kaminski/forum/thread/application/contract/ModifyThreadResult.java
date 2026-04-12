@@ -1,6 +1,7 @@
 package pl.kaminski.forum.thread.application.contract;
 
 import lombok.RequiredArgsConstructor;
+import pl.kaminski.forum.category.application.contract.ModifyCategoryResult;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.AbstractInputValidationError;
 import pl.kaminski.forum.commons.result.Result;
@@ -11,13 +12,13 @@ import pl.kaminski.forum.thread.domain.ThreadTitleVO;
 import java.util.Map;
 import java.util.UUID;
 
-public class CreateThreadResult extends Result<CreateThreadResult.Success, CreateThreadResult.Error> {
+public class ModifyThreadResult extends Result<ModifyThreadResult.Success, ModifyThreadResult.Error> {
 
-    private CreateThreadResult(Success success) {super(success);}
-    private CreateThreadResult(Error error) {super(error);}
-    public static CreateThreadResult success(EntityId id) {return new CreateThreadResult(new Success(id.value()));}
+    private ModifyThreadResult(Success success) {super(success);}
+    private ModifyThreadResult(Error error) {super(error);}
+    public static ModifyThreadResult success(EntityId id) {return new ModifyThreadResult(new Success(id.value()));}
     public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
-    public static CreateThreadResult fromError(Error error) {return new CreateThreadResult(error);}
+    public static ModifyThreadResult fromError(Error error) {return new ModifyThreadResult(error);}
     public static CategoryNotFound categoryNotFound(UUID id) {return new CategoryNotFound(id);}
 
 

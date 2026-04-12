@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.kaminski.forum.commons.AuthenticatedUser;
 import pl.kaminski.forum.users.application.JwtUtils;
 import pl.kaminski.forum.users.domain.IUserRepository;
 
@@ -47,7 +48,9 @@ public class JWTFilter extends OncePerRequestFilter {
         if (userOptional.isEmpty()) {
             return null;
         }
+        var user = userOptional.get();
         var userRole = userOptional.get().getRole();
-        return new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole)));
+        var authenticatedUser = new AuthenticatedUser(user.getId(), user.getUsername().getUsername(), userRole);
+        return new UsernamePasswordAuthenticationToken(authenticatedUser, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole)));
     }
 }

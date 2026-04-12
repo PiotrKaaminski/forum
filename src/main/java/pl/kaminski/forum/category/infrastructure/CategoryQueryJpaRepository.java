@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 interface CategoryQueryJpaRepository extends JpaRepository<QCategory, UUID> {
+
 }

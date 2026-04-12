@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.kaminski.forum.category.application.contract.*;
 import pl.kaminski.forum.commons.EntityId;
+import pl.kaminski.forum.commons.SecurityUtils;
 
-import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -16,8 +16,9 @@ public class CategoryController {
     private final ICategoryService categoryService;
 
     @PostMapping("/category")
-    CreateCategoryResult createCategory(@RequestBody CreateCategoryRequest request, Principal principal) {
-        return categoryService.createCategory(request, principal.getName());
+    CreateCategoryResult createCategory(@RequestBody CreateCategoryRequest request) {
+        var authenticatedUser = SecurityUtils.getAuthenticatedUser();
+        return categoryService.createCategory(request, authenticatedUser);
     }
 
     @PatchMapping("/category/{id}")

@@ -3,11 +3,11 @@ package pl.kaminski.forum.category.domain;
 import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.category.application.contract.CreateCategoryRequest;
 import pl.kaminski.forum.category.application.contract.CreateCategoryResult;
+import pl.kaminski.forum.commons.AuthenticatedUser;
 import pl.kaminski.forum.commons.DateTimeProvider;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.Specification;
 import pl.kaminski.forum.commons.result.Result;
-import pl.kaminski.forum.users.application.contract.IUserService;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -17,13 +17,11 @@ public class CategoryFactory {
 
     private final ICategoryRepository categoryRepository;
     private final DateTimeProvider dateTimeProvider;
-    private final IUserService userService;
     private final Function<UUID, IParentCategory> parentCategoryProvider;
 
-    public Result<Category, CreateCategoryResult.Error> createNewCategory(CreateCategoryRequest request, String requestor) {
-        assert request != null && requestor != null : "Request and requestor cannot be null";
+    public Result<Category, CreateCategoryResult.Error> createNewCategory(CreateCategoryRequest request, AuthenticatedUser requestor) {
 
-        var createdBy = userService.getIdByUsername(requestor).orElseThrow(() -> new RuntimeException("User with username " + requestor + " not found"));
+        var createdBy = requestor.getId();
         if (parentDoesNotExist().isSatisfiedBy(request.parentId())) {
             return Result.error(CreateCategoryResult.parentCategoryNotExists(request.parentId()));
         }

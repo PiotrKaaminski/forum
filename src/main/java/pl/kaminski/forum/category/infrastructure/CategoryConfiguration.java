@@ -11,7 +11,6 @@ import pl.kaminski.forum.category.domain.IParentCategory;
 import pl.kaminski.forum.category.query.CategoryQueryFacade;
 import pl.kaminski.forum.category.query.ICategoryQueryRepository;
 import pl.kaminski.forum.commons.DateTimeProvider;
-import pl.kaminski.forum.users.application.contract.IUserService;
 
 import java.util.UUID;
 
@@ -22,11 +21,11 @@ public class CategoryConfiguration {
     private final ICategoryQueryRepository categoryQueryRepository;
     private final CategoryFactory categoryFactory;
 
-    CategoryConfiguration(CategoryJpaRepository categoryJpaRepository, CategoryQueryJpaRepository categoryQueryJpaRepository, DateTimeProvider dateTimeProvider, IUserService userService) {
+    CategoryConfiguration(CategoryJpaRepository categoryJpaRepository, CategoryQueryJpaRepository categoryQueryJpaRepository, DateTimeProvider dateTimeProvider) {
         this.categoryJpaRepository = categoryJpaRepository;
         this.categoryRepository = new CategoryRepository(categoryJpaRepository);
         this.categoryQueryRepository = new CategoryQueryRepository(categoryQueryJpaRepository);
-        this.categoryFactory = new CategoryFactory(categoryRepository, dateTimeProvider, userService, this::parentCategoryFactory);
+        this.categoryFactory = new CategoryFactory(categoryRepository, dateTimeProvider, this::parentCategoryFactory);
     }
 
     @Bean
