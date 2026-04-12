@@ -2,6 +2,7 @@ package pl.kaminski.forum.web.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.thread.application.contract.*;
 import pl.kaminski.forum.users.infrastructure.SecurityUtils;
 
@@ -22,6 +23,6 @@ public class ThreadController {
 
     @PatchMapping("/thread/{id}")
     ModifyThreadResult modifyThread(@PathVariable UUID id, @RequestBody ModifyThreadRequest request) {
-        return threadService.modifyThread(id, request);
+        return threadService.modifyThread(EntityId.from(id), request);
     }
 }

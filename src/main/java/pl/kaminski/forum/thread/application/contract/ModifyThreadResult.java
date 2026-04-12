@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import pl.kaminski.forum.commons.EntityId;
 import pl.kaminski.forum.commons.result.AbstractInputValidationError;
 import pl.kaminski.forum.commons.result.EmptyResult;
-import pl.kaminski.forum.commons.result.Result;
 import pl.kaminski.forum.commons.result.ResultError;
 import pl.kaminski.forum.thread.domain.ThreadContentVO;
 import pl.kaminski.forum.thread.domain.ThreadTitleVO;
@@ -18,7 +17,7 @@ public class ModifyThreadResult extends EmptyResult<ModifyThreadResult.Error> {
     private ModifyThreadResult(Error error) {super(error);}
     public static ModifyThreadResult success() {return new ModifyThreadResult();}
     public static ValidationError.Builder errorBuilder() {return new ValidationError.Builder();}
-    public static ModifyThreadResult threadNotFound(UUID id) {return new ModifyThreadResult(new ThreadNotFound(id));}
+    public static ModifyThreadResult threadNotFound(EntityId id) {return new ModifyThreadResult(new ThreadNotFound(id.value()));}
     public static ModifyThreadResult categoryNotFound(UUID id) {return new ModifyThreadResult(new CategoryNotFound(id));}
 
 

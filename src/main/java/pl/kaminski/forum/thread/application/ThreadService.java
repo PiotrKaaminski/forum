@@ -9,8 +9,6 @@ import pl.kaminski.forum.thread.application.contract.*;
 import pl.kaminski.forum.thread.domain.IThreadRepository;
 import pl.kaminski.forum.thread.domain.ThreadFactory;
 
-import java.util.UUID;
-
 @RequiredArgsConstructor
 public class ThreadService implements IThreadService {
 
@@ -35,11 +33,11 @@ public class ThreadService implements IThreadService {
 
     @Override
     @Transactional
-    public ModifyThreadResult modifyThread(UUID id, ModifyThreadRequest request) {
+    public ModifyThreadResult modifyThread(EntityId id, ModifyThreadRequest request) {
         assert request != null : "Request cannot be null";
         assert id != null : "Id cannot be null";
 
-        var threadOptional = threadRepository.findById(EntityId.from(id));
+        var threadOptional = threadRepository.findById(id);
         if (threadOptional.isEmpty()) {
             return ModifyThreadResult.threadNotFound(id);
         }

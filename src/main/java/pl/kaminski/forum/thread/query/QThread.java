@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-// todo dlaczego w CQRS wymagane są joiny na całe encje?
+@Table(name = "threads")
 public class QThread {
     @Id
     @Column(name = "thread_id")
