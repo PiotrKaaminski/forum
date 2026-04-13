@@ -43,8 +43,10 @@ public class ThreadService implements IThreadService {
         }
         var thread = threadOptional.get();
 
-        if (categoryNotExistsSpecification.isSatisfiedBy(EntityId.from(request.categoryId()))) {
-            return ModifyThreadResult.categoryNotFound(request.categoryId());
+        if (request.categoryId() != null) {
+            if (categoryNotExistsSpecification.isSatisfiedBy(EntityId.from(request.categoryId()))) {
+                return ModifyThreadResult.categoryNotFound(request.categoryId());
+            }
         }
 
         return thread.modifyThread(request);

@@ -2,7 +2,9 @@ package pl.kaminski.forum.thread.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.util.StringUtils;
 import pl.kaminski.forum.commons.EntityId;
+import pl.kaminski.forum.commons.Modifiers;
 import pl.kaminski.forum.thread.application.contract.ModifyThreadRequest;
 import pl.kaminski.forum.thread.application.contract.ModifyThreadResult;
 
@@ -26,24 +28,26 @@ public class Thread {
     private EntityId createdBy;
     private LocalDateTime createdAt;
 
-    // todo do zmiany, żeby zmieniać stan dopiero po walidacji
     public ModifyThreadResult modifyThread(ModifyThreadRequest request) {
         var validationErrorBuilder = ModifyThreadResult.errorBuilder();
+        var modifiers = new Modifiers();
 
-        ThreadTitleVO.create(request.title()).handle(this::setTitle, validationErrorBuilder::withTitleVoError);
-        ThreadContentVO.create(request.content()).handle(this::setContent, validationErrorBuilder::withContentVoError);
-
-        if (request.categoryId() == null) {
-            validationErrorBuilder.withCategoryEmpty();
+        if (StringUtils.hasText(request.title())) {
+            ThreadTitleVO.create(request.title()).handle(title -> modifiers.add(title, this::setTitle), validationErrorBuilder::withTitleVoError);
         }
-        this.categoryId = EntityId.from(request.categoryId());
-
+        if (StringUtils.hasText(request.content())) {
+            ThreadContentVO.create(request.content()).handle(content -> modifiers.add(content, this::setContent),validationErrorBuilder::withContentVoError);
+        }
+        if (request.categoryId() != null) {
+            modifiers.add(EntityId.from(request.categoryId()), this::setCategoryId);
+        }
         if (validationErrorBuilder.hasViolations()) {
             return validationErrorBuilder.build();
         }
-
+        modifiers.modifyAll();
         return ModifyThreadResult.success();
     }
+
 
 }
 
