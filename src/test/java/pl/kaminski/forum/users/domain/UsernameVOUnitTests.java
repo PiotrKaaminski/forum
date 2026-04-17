@@ -34,7 +34,7 @@ public class UsernameVOUnitTests {
         String value = "validUser";
         var result = UsernameVO.create(value);
         var success = assertIsSuccess(result);
-        assertEquals(value, success.getValue());
+        assertEquals(value, success.getUsername());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class UsernameVOUnitTests {
         String value = "abc";
         var result = UsernameVO.create(value);
         var success = assertIsSuccess(result);
-        assertEquals(value, success.getValue());
+        assertEquals(value, success.getUsername());
     }
 
     @Test
@@ -50,8 +50,7 @@ public class UsernameVOUnitTests {
         String value = "a".repeat(20);
         var result = UsernameVO.create(value);
         var success = assertIsSuccess(result);
-        assertEquals(value, success.getValue());
+        assertEquals(value, success.getUsername());
     }
 
-    // todo testy dla notUnique
 }
