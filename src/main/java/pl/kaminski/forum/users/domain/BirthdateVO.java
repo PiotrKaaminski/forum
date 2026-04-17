@@ -2,7 +2,6 @@ package pl.kaminski.forum.users.domain;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
-import org.springframework.util.StringUtils;
 import pl.kaminski.forum.commons.result.Result;
 import pl.kaminski.forum.commons.result.ResultError;
 
@@ -12,26 +11,26 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BirthDateVO {
+public class BirthdateVO {
 
 
     private LocalDate birthdate;
 
-    static Result<BirthDateVO, Error> create(LocalDate value) {
+    static Result<BirthdateVO, Error> create(LocalDate value) {
         if (value == null) {
             return Result.error(Error.EMPTY);
         }
         if (value.isAfter(LocalDate.now())) {
             return Result.error(Error.FUTURE_BIRTHDATE);
         }
-        return Result.success(new BirthDateVO(value));
+        return Result.success(new BirthdateVO(value));
     }
 
     @RequiredArgsConstructor
     @Getter
     public enum Error implements ResultError {
-        EMPTY("birthDate cannot be empty"),
-        FUTURE_BIRTHDATE("birthDate cannot be in the future");
+        EMPTY("birthdate cannot be empty"),
+        FUTURE_BIRTHDATE("birthdate cannot be in the future");
 
         private final String message;
     }

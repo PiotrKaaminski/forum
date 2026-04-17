@@ -9,8 +9,15 @@ import static pl.kaminski.forum.AssertResult.assertIsSuccess;
 public class UsernameVOUnitTests {
 
     @Test
-    void given_emptyValue_expect_error() {
+    void given_nullValue_expect_error() {
         String value = null;
+        var result = UsernameVO.create(value);
+        assertError(result, UsernameVO.Error.EMPTY);
+    }
+
+    @Test
+    void given_emptyValue_expect_error() {
+        String value = "";
         var result = UsernameVO.create(value);
         assertError(result, UsernameVO.Error.EMPTY);
     }

@@ -37,7 +37,7 @@ public class UserFactory {
         PasswordVO.create(request.password(), passwordEncoder).handle(userBuilder::password, validationErrorBuilder::withPasswordVoError);
         FirstNameVO.create(request.firstName()).handle(userBuilder::firstName, validationErrorBuilder::withFirstNameVoError);
         LastNameVO.create(request.lastName()).handle(userBuilder::lastName, validationErrorBuilder::withLastNameVoError);
-        BirthDateVO.create(request.birthDate()).handle(userBuilder::birthdate, validationErrorBuilder::withBirthDateVoError);
+        BirthdateVO.create(request.birthDate()).handle(userBuilder::birthdate, validationErrorBuilder::withBirthDateVoError);
         Optional.ofNullable(request.role()).ifPresentOrElse(userBuilder::role, validationErrorBuilder::withEmptyRole);
 
         if (validationErrorBuilder.hasViolations()) {

@@ -24,7 +24,7 @@ public class User {
     private PasswordVO password;
     private FirstNameVO firstName;
     private LastNameVO lastName;
-    private BirthDateVO birthdate;
+    private BirthdateVO birthdate;
     @Enumerated(EnumType.STRING)
     private Role role;
     private LocalDateTime creationDate;

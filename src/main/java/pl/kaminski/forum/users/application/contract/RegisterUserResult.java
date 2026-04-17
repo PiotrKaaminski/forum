@@ -69,7 +69,7 @@ public class RegisterUserResult extends Result<RegisterUserResult.Success, Regis
                 withViolation(violation);
             }
 
-            public void withBirthDateVoError(BirthDateVO.Error error) {
+            public void withBirthDateVoError(BirthdateVO.Error error) {
                 var violation = switch (error) {
                     case EMPTY -> ViolationError.BIRTHDATE_EMPTY;
                     case FUTURE_BIRTHDATE -> ViolationError.BIRTHDATE_FUTURE;
