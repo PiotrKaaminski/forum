@@ -23,7 +23,7 @@ import java.util.function.Function;
 
 public class UserConfiguration {
 
-    private final IUserRepository userRepository;
+    final UserRepository userRepository;
     private final IUserQueryRepository userQueryRepository;
     private final UserFactory userFactory;
     private final PasswordEncoder passwordEncoder;
